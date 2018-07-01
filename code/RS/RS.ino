@@ -1,19 +1,27 @@
 /* we want to fix the RS machine
-    DCmoter compose a shoot machinism doesn't react
+    DC moter compose a shoot machinism doesn't react
 */
-
+#define LEFT 13,12,10 //Left moter pins (SIG1,SIG2,PWM)
+#define RIGHT 7,8,9    //Right -
+#define SHOOT 2,3,6    //Shoot -
 
 #include <VarSpeedServo.h>
 
 VarSpeedServo servo;
 
 void setup() {
-    pinMode(5, OUTPUT);
-    pinMode(6, OUTPUT);
+    pinMode(2,OUTPUT);
+    pinMode(3,OUTPUT);
+    pinMode(7,OUTPUT);
+    pinMode(8,OUTPUT);
+    pinMode(13,OUTPUT);
+    pinMode(12,OUTPUT);
     servo.attach(11);
 }
 
 void loop() {
+    moter(LEFT,HIGH,LOW,255);
+    moter(RIGHT,HIGH,LOW,255);
 
 /*    moter('l', HIGH, LOW, 500, 255);
     moter('l', HIGH, HIGH, 500, 255);
@@ -29,37 +37,10 @@ void loop() {
 */
 }
 
-void moter(char type, int I1, int I2, int pwm) {
+void moter(int I1Pin,int I2Pin,int pwmPin, int I1, int I2, int pwm) {
 
-    int pins[] = {0, 0, 0}; //pinI1, pinI2, pinPWM
+    analogWrite(pwmPin,pwm);
 
-    switch (type) {
-        case 'l':
-            pins[0] = 13;
-            pins[1] = 12;
-            pins[2] = 10;
-           break;
-
-        case 'r':
-            pins[0] = 7;
-            pins[1] = 8;
-            pins[2] = 9;
-            break;
-
-        case 's':
-            pins[0] = 2;
-            pins[1] = 3;
-            pins[2] = 6;
-            break;
-    }
-
-    analogWrite(pins[2], pwm);
-
-    digitalWrite(pins[0], I1);
-    digitalWrite(pins[1], I2);
-}
-
-void ford(){
-    moter('l',HIGH,LOW,255);
-    moter('l',HIGH,LOW,255);
+    digitalWrite(I1Pin,I1);
+    digitalWrite(I2Pin,I2);
 }
