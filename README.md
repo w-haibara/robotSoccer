@@ -66,22 +66,22 @@ wifi通信モジュールです．arduino互換機として動かします．
  ---- | -------------------------------- | ----------------------------------------------  
 |3V3  | 3.3V power supply                |MM-TXS01のVCC(3.3V)                             |  
 |EN   | HIGHならチップをアクティブにする |3.3Vにプルアップ                                |  
-|IO14 | GPIO14; HSPI_CLK                 |                                                |  
-|IO12 | GPIO12; HSPI_MISO                |                                                |  
-|IO13 | GPIO13; HSPI_MOSI; UART0_CTS     |                                                |  
+|IO14 | GPIO14; HSPI_CLK                 |非接続                                          |  
+|IO12 | GPIO12; HSPI_MISO                |非接続                                          |  
+|IO13 | GPIO13; HSPI_MOSI; UART0_CTS     |非接続                                          |  
 |IO15 | GPIO15; MTDO; HSPICS; UART0_RTS  |プルダウン            　　　　　　　　　　　    |  
 |IO2  | GPIO2; UART1_TXD                 |3.3Vにプルアップ            　　　　　　　　    |  
 |IO0  | GPIO0                            |3.3Vにプルアップ(ESPに書き込むときはプルダウン) |  
 |GND  | GND                              |GND                                             |  
-|     |                                  |                                                |  
-|IO4  | GPIO4                            |                                                |  
+|     |                                  |非接続                                          |  
+|IO4  | GPIO4                            |非接続                                          |  
 |RXD  | UART0_RXD; GPIO3                 |MM-TXS01のB8(->arduinoのTX)                     |  
 |TXD  | UART0_TXD; GPIO1                 |MM-TXS01のB7(->arduinoのRX)                     |  
 |GND  | GND                              |GND                                             |  
-|IO5  | GPIO5                            |                                                |  
+|IO5  | GPIO5                            |非接続                                          |  
 |RST  | Reset                            |3.3Vにプルアップ                                |  
-|TOUT | AD Conveter                      |                                                |  
-|IO16 | GPIO16                           |                                                |  
+|TOUT | AD Conveter                      |非接続                                          |  
+|IO16 | GPIO16                           |非接続                                          |  
 |GND  | GND                              |GND                                             |  
 
 
