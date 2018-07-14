@@ -73,7 +73,7 @@ wifi通信モジュールです．arduino互換機として動かします．
 |IO2  | GPIO2; UART1_TXD                 |3.3Vにプルアップ            　　　　　　　　    |  
 |IO0  | GPIO0                            |3.3Vにプルアップ(ESPに書き込むときはプルダウン) |  
 |GND  | GND                              |GND                                             |  
-|     |                                  |非接続                                          |  
+|     |                                  |                                                |  
 |IO4  | GPIO4                            |非接続                                          |  
 |RXD  | UART0_RXD; GPIO3                 |MM-TXS01のB8(->arduinoのTX)                     |  
 |TXD  | UART0_TXD; GPIO1                 |MM-TXS01のB7(->arduinoのRX)                     |  
