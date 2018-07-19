@@ -110,8 +110,8 @@ OEピンをLOWにするとA1-A8,B1-B8のすべてのピンがHIGH-Zになる．(
 |ESP|3.3V側|<->|5v側|arduino側|  
  -- | ---- | - | -- | -------  
 |   |      |   |    |         |  
-|RX |  A7  |<->| B7 | TX      |  
-|TX |  A8  |<->| B8 | RX      |  
+|TX |  A7  |<->| B7 | RX      |  
+|RX |  A8  |<->| B8 | TX      |  
 |GND|      |   |GND | GND     |  
 
 詳しくは[MM-TXS01取扱説明書](http://www.sunhayato.co.jp/dcms_media/other/SG13006_MM-TXS01_%E5%8F%96%E8%AA%AC.pdf)を参照してください．

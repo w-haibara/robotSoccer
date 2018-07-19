@@ -1,0 +1,78 @@
+/* we want to fix the RS machine
+   DC moter compose a shoot machinism doesn't react
+*/
+#define LEFT 13,12,10 //Left moter pins (SIG1,SIG2,PWM)
+#define RIGHT 7,8,9    //Right moter pins (SIG1,SIG2,PWM)
+#define SHOOT 2,3,6    //Shoot moter pins (SIG1,SIG2,PWM)
+
+#include <VarSpeedServo.h>
+
+VarSpeedServo servo;
+
+int re; // 受信データ
+
+void setup() {
+  Serial.begin(9600);
+
+  pinMode(2, OUTPUT);
+  pinMode(3, OUTPUT);
+  pinMode(7, OUTPUT);
+  pinMode(8, OUTPUT);
+  pinMode(13, OUTPUT);
+  pinMode(12, OUTPUT);
+  servo.attach(11);
+}
+
+void loop() {
+  char left  = 0;
+  char right = 0;
+  char shoot = 0;
+  char servo = 0;
+
+  // 受信バッファに（ヘッダ＋char*4）以上のデータが着ているか確認
+  if ( Serial.available() >= sizeof('H') + sizeof(char) * 4 ) {
+    // ヘッダの確認
+    if ( Serial.read() == 'H' ) {
+      //シリアル通信でフラグを管理する
+      left  = Serial.readStringUntil(',');
+      right = Serial.readStringUntil(',');
+      shoot = Serial.readStringUntil(',');
+      servo = Serial.readStringUntil(',');
+    }
+  }
+  if (right == true) {
+
+  }
+  if (left == true) {
+
+  }
+
+}
+
+void moter(int In1Pin, int In2Pin, int pwmPin, int In1, int In2, int pwm) {
+
+  analogWrite(pwmPin, pwm);
+
+  digitalWrite(In1Pin, In1);
+  digitalWrite(In2Pin, In2);
+}
+/*
+ * switch (val) {
+case ('front'):
+  moter(LEFT, HIGH, LOW, 255);
+  moter(RIGHT, HIGH, LOW, 255);
+  break;
+case ('rear'):
+  moter(LEFT, LOW, HIGH, 255);
+  moter(RIGHT, LOW, HIGH, 255);
+  break;
+case ('left'):
+  moter(LEFT, LOW, HIGH, 255);
+  moter(RIGHT, HIGH, LOW, , 255);
+  break;
+case ('right'):
+  moter(LEFT, HIGH, LOW, 255);
+  moter(RIGHT, LOW, HIGH, 255);
+  break;
+
+ */
