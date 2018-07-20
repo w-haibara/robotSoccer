@@ -24,29 +24,25 @@ void setup() {
 }
 
 void loop() {
-  char left  = 0;
-  char right = 0;
-  char shoot = 0;
-  char servo = 0;
-
-  // 受信バッファに（ヘッダ＋char*4）以上のデータが着ているか確認
-  if ( Serial.available() >= sizeof('H') + sizeof(char) * 4 ) {
+  static byte drive = B00000000; /*前半4bitは右モーター，後半4bitは左モーター
+                                  *それぞれの4bitについて
+                                  *前半1bitは1で正転，1で逆転
+                                  *後半3bitで8段階で指定する
+                                  */
+                                 
+  static byte shoot = B00000000; /*前半1bitでshootするかどうか
+                                  *後半の7bitでサーボの回転角を0〜128度の値で指定する
+                                  */
+  // 受信バッファに（ヘッダ＋byte*4）以上のデータが着ているか確認
+  if ( Serial.available() >= sizeof('H') + sizeof(byte) * 4 ) {
     // ヘッダの確認
     if ( Serial.read() == 'H' ) {
-      //シリアル通信でフラグを管理する
-      left  = Serial.readStringUntil(',');
-      right = Serial.readStringUntil(',');
-      shoot = Serial.readStringUntil(',');
-      servo = Serial.readStringUntil(',');
+      drive = Serial.read();
+      shoot = Serial.read();
     }
   }
-  if (right == true) {
-
-  }
-  if (left == true) {
-
-  }
-
+  
+  
 }
 
 void moter(int In1Pin, int In2Pin, int pwmPin, int In1, int In2, int pwm) {
@@ -57,22 +53,22 @@ void moter(int In1Pin, int In2Pin, int pwmPin, int In1, int In2, int pwm) {
   digitalWrite(In2Pin, In2);
 }
 /*
- * switch (val) {
-case ('front'):
+   switch (val) {
+  case ('front'):
   moter(LEFT, HIGH, LOW, 255);
   moter(RIGHT, HIGH, LOW, 255);
   break;
-case ('rear'):
+  case ('rear'):
   moter(LEFT, LOW, HIGH, 255);
   moter(RIGHT, LOW, HIGH, 255);
   break;
-case ('left'):
+  case ('left'):
   moter(LEFT, LOW, HIGH, 255);
   moter(RIGHT, HIGH, LOW, , 255);
   break;
-case ('right'):
+  case ('right'):
   moter(LEFT, HIGH, LOW, 255);
   moter(RIGHT, LOW, HIGH, 255);
   break;
 
- */
+*/
