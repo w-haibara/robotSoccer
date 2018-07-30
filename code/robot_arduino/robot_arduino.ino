@@ -33,8 +33,8 @@ void loop() {
   static byte shoot = B00000000; /*前半1bitでshootするかどうか
                                   *後半の7bitでサーボの回転角を0〜128度の値で指定する
                                   */
-  // 受信バッファに（ヘッダ＋byte*4）以上のデータが着ているか確認
-  if ( Serial.available() >= sizeof('H') + sizeof(byte) * 4 ) {
+  // 受信バッファに（ヘッダ＋byte*2）以上のデータが着ているか確認
+  if ( Serial.available() >= sizeof('H') + sizeof(byte) * 2 ) {
     // ヘッダの確認
     if ( Serial.read() == 'H' ) {
       drive = Serial.read();
