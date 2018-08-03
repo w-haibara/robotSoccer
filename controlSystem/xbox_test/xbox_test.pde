@@ -14,8 +14,8 @@ void draw() {
   fill(200, 20); 
   rect(0, 0, width, height);
 
-  int[] N = {2, 4, 5, 6};
-  xbox(N[num]);
+  int[] controler = {2, 4, 5, 6};
+  xbox(controler[num]);
   num = (num==3)?-1:num; 
   num++;
 
