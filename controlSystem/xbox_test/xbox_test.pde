@@ -4,19 +4,16 @@ int  num = 0;
 int count = 1;
 
 void setup() {
-  //fullScreen();
-  size(800, 1000);
+  fullScreen();
+  //size(800, 1000);
+
   background(20);
   noStroke();
+
   textSize(50);
 }
 
 void draw() {
-  if (count%4==0) {
-    fill(20, 10); 
-    rect(0, 0, width, height);
-  }
-
   int[] controlers = {10, 11, 12, 13};
 
   xbox(controlers, num, true);
@@ -33,16 +30,14 @@ void draw() {
    }
    num = (num==7)?-1:num;
    num++;*/
-
-  if (count%8==0) {
-    fill(20, 30); 
-    rect(0, 0, width, height);
-  }
 }
 
 void xbox(int[] Controlers, int NUM, boolean test) {
   translate(0, (height/Controlers.length)*NUM);
   fill(255);
+  PFont nameFont = loadFont("Kilowatt-Regular-48.vlw");
+  textFont(nameFont);
+
   if (!test) {
     ControlIO control;
     ControlDevice device1;    //, device2;
@@ -110,19 +105,23 @@ void xbox(int[] Controlers, int NUM, boolean test) {
     float y2 = 0;
     float lr = 0;
 
-    ellipse(x1*100+width/2-200, y1*100+height/2-400, 8, 8);
-    ellipse(x2*100+width/2+200, y2*100+height/2-400, 8, 8);
-    rect(lr*300+width/2, height/2-420, 20, 20);
+    ellipse(x1*100+width/2-200, y1*100+height/2-390, 8, 8);
+    ellipse(x2*100+width/2+200, y2*100+height/2-390, 8, 8);
+    rect(lr*300+width/2, height/2-430, 20, 20);
 
-    text("A", 50, 100);
-    text("B", 150, 100);
-    text("X", 250, 100);
-    text("Y", 350, 100);
-    text("RB", 450, 100);
-    text("LB", 550, 100);
-    text("BACK", 650, 100);
-    text("START", 850, 100);
+    String[] buttonName  ={ "A", "B", "X", "Y", "RB", "LB", "BACK", "START"};
+
+    text(num+1, 50, 50);
+
+    for (int i=0; i<=7; i++) {
+      int buttonNum = (i==7)? 8 : i;
+      text(buttonName[i], 250+buttonNum*100, 50);
+    }
   }
+
+  fill(20, 30); 
+  rect(0, 0, width, 100+height/2-390);
 
   translate(0, -(height/Controlers.length)*NUM);
 }
+ 
