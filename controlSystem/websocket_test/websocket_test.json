@@ -1,0 +1,24 @@
+[
+    {
+        "id": "1f7b04a9.cf293b",
+        "type": "websocket in",
+        "z": "dc292baa.ae2e1",
+        "name": "",
+        "server": "92354ff1.10dce8",
+        "client": "",
+        "x": 102.50001525878906,
+        "y": 63.666656494140625,
+        "wires": [
+            [
+                "d2b866b9.d1c398"
+            ]
+        ]
+    },
+    {
+        "id": "92354ff1.10dce8",
+        "type": "websocket-listener",
+        "z": "",
+        "path": "/ws/test",
+        "wholemsg": "false"
+    }
+]
