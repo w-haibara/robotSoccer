@@ -105,6 +105,8 @@ void xbox(int[] Controlers, int NUM, boolean test) {
     float y2 = 0;
     float lr = 0;
 
+    lr = (float((mouseX-width/2)*5)/width);
+
     ellipse(x1*100+width/2-200, y1*100+height/2-390, 8, 8);
     ellipse(x2*100+width/2+200, y2*100+height/2-390, 8, 8);
     rect(lr*300+width/2, height/2-430, 20, 20);
@@ -119,9 +121,8 @@ void xbox(int[] Controlers, int NUM, boolean test) {
     }
   }
 
-  fill(20, 30); 
+  fill(20, 80); 
   rect(0, 0, width, 100+height/2-390);
 
   translate(0, -(height/Controlers.length)*NUM);
 }
- 
