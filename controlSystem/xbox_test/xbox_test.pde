@@ -1,36 +1,46 @@
 import org.gamecontrolplus.*;
-import java.util.List;
+
 
 int  num = 0;
 int count = 1;
 
 void setup() {
-  size(1200, 800);
-  background(200);
+  fullScreen();
+  background(20);
+  noStroke();
   textSize(50);
 }
 
 void draw() {
-  fill(200, 20); 
-  rect(0, 0, width, height);
-
-  int[] controler = {2, 4, 5, 6};
-  xbox(controler[num]);
-  num = (num==3)?-1:num; 
-  num++;
-
-  try {
-    xbox(num);
+  if (count%4==0) {
+    fill(20, 10); 
+    rect(0, 0, width, height);
   }
-  catch(IndexOutOfBoundsException e) {
-  }
-  num = (num==7)?-1:num;
+  int[] controlers = {10, 11, 12, 13};
+
+
+  xbox(controlers, num);
   num++;
+  num = (num==4)? 0 : num;
+  count++;
+
+  /*try {
+   xbox(num);
+   }
+   catch(IndexOutOfBoundsException e) {
+   }
+   num = (num==7)?-1:num;
+   num++;*/
+
+  if (count%8==0) {
+    fill(20, 30); 
+    rect(0, 0, width, height);
+  }
 }
 
-void xbox(int NUM) {
-  translate(0, 600-NUM*100);
-  fill(0);
+void xbox(int[] Controlers, int NUM) {
+  translate(0, (height/Controlers.length)*NUM);
+  fill(255);
 
   ControlIO control;
   ControlDevice device1;    //, device2;
@@ -38,7 +48,7 @@ void xbox(int NUM) {
   ControlSlider[] sliders = new ControlSlider[5];
 
   control = ControlIO.getInstance(this);
-  device1 = control.getDevice(NUM);
+  device1 = control.getDevice(Controlers[num]);
   //device2 = control.getDevice("Controller (Xbox 360 Wireless Receiver for Windows)");
   device1.open();
 
@@ -63,9 +73,9 @@ void xbox(int NUM) {
   float y2 = sliders[2].getValue();
   float lr = -sliders[4].getValue();
 
-  ellipse(x1*100+width/2-200, y1*100+height/2-150, 8, 8);
-  ellipse(x2*100+width/2+200, y2*100+height/2-150, 8, 8);
-  rect(lr*300+width/2, height/2-170, 20, 20);
+  ellipse(x1*100+width/2-200, y1*100+height/2-400, 8, 8);
+  ellipse(x2*100+width/2+200, y2*100+height/2-400, 8, 8);
+  rect(lr*300+width/2, height/2-420, 20, 20);
 
   if (A.pressed()) {
     text("A", 50, 100);
@@ -91,4 +101,6 @@ void xbox(int NUM) {
   if (START.pressed()) {
     text("START", 850, 100);
   }
+
+  translate(0, -(height/Controlers.length)*NUM);
 }
