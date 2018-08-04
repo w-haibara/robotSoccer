@@ -35,11 +35,11 @@ void draw() {
 void xbox(int[] Controlers, int NUM, boolean test) {
   translate(0, (height/Controlers.length)*NUM);
   fill(255);
-  PFont nameFont = loadFont("Kilowatt-Regular-48.vlw");
+  PFont nameFont = loadFont("Kilowatt-Regular-70.vlw");
   textFont(nameFont);
 
   do {
-    text(num+1, 50, 50);
+    text(num+1, 50, 60);
   } while (false);
 
   if (!test) {
@@ -80,34 +80,35 @@ void xbox(int[] Controlers, int NUM, boolean test) {
     ellipse(x2*100+width/2+200, y2*100+height/2-400, 8, 8);
     rect(lr*300+width/2, height/2-420, 20, 20);
 
-    if (buttonStatus[0].pressed()) {
-      text("A", 50, 100);
-    }
-    if (B.pressed()) {
-      text("B", 150, 100);
-    }
-    if (X.pressed()) {
-      text("X", 250, 100);
-    }
-    if (Y.pressed()) {
-      text("Y", 350, 100);
-    }
-    if (RB.pressed()) {
-      text("RB", 450, 100);
-    }
-    if (LB.pressed()) {
-      text("LB", 550, 100);
-    }
-    if (BACK.pressed()) {
-      text("BACK", 650, 100);
-    }
-    if (START.pressed()) {
-      text("START", 850, 100);
-    }
+    /* if (A.pressed()) {
+     text("A", 50, 100);
+     }
+     if (B.pressed()) {
+     text("B", 150, 100);
+     }
+     if (X.pressed()) {
+     text("X", 250, 100);
+     }
+     if (Y.pressed()) {
+     text("Y", 350, 100);
+     }
+     if (RB.pressed()) {
+     text("RB", 450, 100);
+     }
+     if (LB.pressed()) {
+     text("LB", 550, 100);
+     }
+     if (BACK.pressed()) {
+     text("BACK", 650, 100);
+     }
+     if (START.pressed()) {
+     text("START", 850, 100);
+     }*/
+
     String[] buttonName  ={ "A", "B", "X", "Y", "RB", "LB", "BACK", "START"};
     for (int i=0; i<=7; i++) {
       if (buttonStatus[i].pressed()) {
-        text(buttonName[i], 250+i*100, 50);
+        text(buttonName[i], 250+i*100, 60);
       }
     }
   } else {
@@ -126,10 +127,8 @@ void xbox(int[] Controlers, int NUM, boolean test) {
 
     String[] buttonName  ={ "A", "B", "X", "Y", "RB", "LB", "BACK", "START"};
 
-    text(num+1, 50, 50);
-
     for (int i=0; i<=7; i++) {
-      text(buttonName[i], 250+i*100, 50);
+      text(buttonName[i], 250+i*100, 60);
     }
   }
 
