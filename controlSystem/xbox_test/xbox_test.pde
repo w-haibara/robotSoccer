@@ -38,6 +38,10 @@ void xbox(int[] Controlers, int NUM, boolean test) {
   PFont nameFont = loadFont("Kilowatt-Regular-48.vlw");
   textFont(nameFont);
 
+  do {
+    text(num+1, 50, 50);
+  } while (false);
+
   if (!test) {
     ControlIO control;
     ControlDevice device1;    //, device2;
@@ -57,6 +61,8 @@ void xbox(int[] Controlers, int NUM, boolean test) {
     RB = device1.getButton(5);
     BACK = device1.getButton(6);
     START = device1.getButton(7);
+    ControlButton[] buttonStatus  ={ A, B, X, Y, RB, LB, BACK, START};
+
 
     sliders[0] = device1.getSlider(0);
     sliders[1] = device1.getSlider(1);
@@ -74,7 +80,7 @@ void xbox(int[] Controlers, int NUM, boolean test) {
     ellipse(x2*100+width/2+200, y2*100+height/2-400, 8, 8);
     rect(lr*300+width/2, height/2-420, 20, 20);
 
-    if (A.pressed()) {
+    if (buttonStatus[0].pressed()) {
       text("A", 50, 100);
     }
     if (B.pressed()) {
@@ -98,6 +104,12 @@ void xbox(int[] Controlers, int NUM, boolean test) {
     if (START.pressed()) {
       text("START", 850, 100);
     }
+    String[] buttonName  ={ "A", "B", "X", "Y", "RB", "LB", "BACK", "START"};
+    for (int i=0; i<=7; i++) {
+      if (buttonStatus[i].pressed()) {
+        text(buttonName[i], 250+i*100, 50);
+      }
+    }
   } else {
     float x1 = 0;
     float y1 = 0;
@@ -105,24 +117,34 @@ void xbox(int[] Controlers, int NUM, boolean test) {
     float y2 = 0;
     float lr = 0;
 
-    lr = (float((mouseX-width/2)*5)/width);
+    lr = (float((mouseX-width/4)*5)/width);
+    y1 = float(mouseY-height/2+390)/100;
 
-    ellipse(x1*100+width/2-200, y1*100+height/2-390, 8, 8);
-    ellipse(x2*100+width/2+200, y2*100+height/2-390, 8, 8);
-    rect(lr*300+width/2, height/2-430, 20, 20);
+    ellipse(x1*100+width/4-200, y1*100+height/2-390, 8, 8);
+    ellipse(x2*100+width/4+200, y2*100+height/2-390, 8, 8);
+    rect(lr*300+width/4, height/2-430, 20, 20);
 
     String[] buttonName  ={ "A", "B", "X", "Y", "RB", "LB", "BACK", "START"};
 
     text(num+1, 50, 50);
 
     for (int i=0; i<=7; i++) {
-      int buttonNum = (i==7)? 8 : i;
-      text(buttonName[i], 250+buttonNum*100, 50);
+      text(buttonName[i], 250+i*100, 50);
     }
   }
 
   fill(20, 80); 
-  rect(0, 0, width, 100+height/2-390);
+  int rectX = 250+700+200;
+  int rectY = height/4;
+
+  rect(0, 0, rectX, rectY);
+
+  do {
+    noFill();
+    stroke(255);
+    rect(0, 0, rectX, rectY);
+    noStroke();
+  } while (false);
 
   translate(0, -(height/Controlers.length)*NUM);
 }
