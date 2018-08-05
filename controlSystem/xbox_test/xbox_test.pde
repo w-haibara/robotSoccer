@@ -52,6 +52,7 @@ void xbox(int[] Controlers, int NUM, boolean test) {
     //device2 = control.getDevice("Controller (Xbox 360 Wireless Receiver for Windows)");
     device1.open();
 
+
     A = device1.getButton(0);
     B = device1.getButton(1);
     X = device1.getButton(2);
@@ -61,7 +62,6 @@ void xbox(int[] Controlers, int NUM, boolean test) {
     BACK = device1.getButton(6);
     START = device1.getButton(7);
     ControlButton[] buttonStatus  ={ A, B, X, Y, RB, LB, BACK, START};
-
 
     sliders[0] = device1.getSlider(0);
     sliders[1] = device1.getSlider(1);
@@ -75,9 +75,7 @@ void xbox(int[] Controlers, int NUM, boolean test) {
     float y2 = sliders[2].getValue();
     float lr = -sliders[4].getValue();
 
-    ellipse(x1*100+width/2-200, y1*100+height/2-400, 8, 8);
-    ellipse(x2*100+width/2+200, y2*100+height/2-400, 8, 8);
-    rect(lr*300+width/2, height/2-420, 20, 20);
+    drawJoy(x1, y1, x2, y2, lr);
 
     /* if (A.pressed()) {
      text("A", 50, 100);
@@ -120,12 +118,10 @@ void xbox(int[] Controlers, int NUM, boolean test) {
     lr = (float((mouseX-width/4)*5)/width);
     y1 = float(mouseY-height/2+390)/100;
 
-    ellipse(x1*100+width/4-200, y1*100+height/2-390, 8, 8);
-    ellipse(x2*100+width/4+200, y2*100+height/2-390, 8, 8);
-    rect(lr*300+width/4, height/2-430, 20, 20);
+    drawJoy(x1, y1, x2, y2, lr);
 
     String[] buttonName  ={ "A", "B", "X", "Y", "RB", "LB", "BACK", "START"};
-
+fill(20);
     for (int i=0; i<=7; i++) {
       text(buttonName[i], 120+i*100, 60);
     }
@@ -145,4 +141,10 @@ void xbox(int[] Controlers, int NUM, boolean test) {
   } while (false);
 
   translate(0, -(height/Controlers.length)*NUM);
+}
+
+void drawJoy(float x1, float y1, float x2, float y2, float lr) {
+  ellipse(x1*100+width/4-200, y1*100+height/2-390, 8, 8);
+  ellipse(x2*100+width/4+200, y2*100+height/2-390, 8, 8);
+  rect(lr*300+width/4, height/2-430, 20, 20);
 }
