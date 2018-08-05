@@ -5,7 +5,6 @@ int count = 1;
 
 void setup() {
   fullScreen();
-  //size(800, 1000);
 
   background(20);
   noStroke();
@@ -128,12 +127,12 @@ void xbox(int[] Controlers, int NUM, boolean test) {
     String[] buttonName  ={ "A", "B", "X", "Y", "RB", "LB", "BACK", "START"};
 
     for (int i=0; i<=7; i++) {
-      text(buttonName[i], 250+i*100, 60);
+      text(buttonName[i], 120+i*100, 60);
     }
   }
 
   fill(20, 80); 
-  int rectX = 250+700+200;
+  int rectX = 120+700+100;
   int rectY = height/4;
 
   rect(0, 0, rectX, rectY);
