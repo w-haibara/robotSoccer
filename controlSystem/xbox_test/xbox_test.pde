@@ -27,7 +27,7 @@ void setup() {
 }
 
 void draw() {
-  int[] controlers = {10, 11, 12, 13};
+  int[] controlers = {2, 4, 5, 6};
 
   xbox(controlers, num-1, true);
 
@@ -65,11 +65,21 @@ void xbox(int[] Controlers, int NUM, boolean test) {
     ControlButton A, B, X, Y, LB, RB, BACK, START;
     ControlSlider[] sliders = new ControlSlider[5];
 
+    ControlHat hat;
+
     control = ControlIO.getInstance(this);
     device1 = control.getDevice(Controlers[num-1]);
     //device2 = control.getDevice("Controller (Xbox 360 Wireless Receiver for Windows)");
     device1.open();
 
+    /*
+    float multiplier = 1;
+     float y;
+     final boolean[] indicators = new boolean[4];
+     final String[] itext = { "left", "right", "up", "down" };
+     */
+    hat = device1.getHat(0);
+println(hat);
 
     A = device1.getButton(0);
     B = device1.getButton(1);
@@ -95,35 +105,10 @@ void xbox(int[] Controlers, int NUM, boolean test) {
 
     drawJoy(x1, y1, x2, y2, lr);
 
-    /* if (A.pressed()) {
-     text("A", 50, 100);
-     }
-     if (B.pressed()) {
-     text("B", 150, 100);
-     }
-     if (X.pressed()) {
-     text("X", 250, 100);
-     }
-     if (Y.pressed()) {
-     text("Y", 350, 100);
-     }
-     if (RB.pressed()) {
-     text("RB", 450, 100);
-     }
-     if (LB.pressed()) {
-     text("LB", 550, 100);
-     }
-     if (BACK.pressed()) {
-     text("BACK", 650, 100);
-     }
-     if (START.pressed()) {
-     text("START", 850, 100);
-     }*/
-
     String[] buttonName  ={ "A", "B", "X", "Y", "RB", "LB", "BACK", "START"};
     for (int i=0; i<=7; i++) {
       if (buttonStatus[i].pressed()) {
-        text(buttonName[i], 250+i*100, 60);
+        text(buttonName[i], 120+i*100, 60);
       }
     }
   } else {
@@ -213,6 +198,7 @@ void keyPressed() {
 }
 
 void printBoolean() {
+  /*
   println("Up : "+Up);
   println("Down : "+Down);
   println("Right : "+Right);
@@ -221,4 +207,5 @@ void printBoolean() {
   println("LT : "+LT);
   println("Buttou1 : "+Buttou1);
   println("Buttou2 : "+Buttou2);
+  */
 }
