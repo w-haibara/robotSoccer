@@ -1,5 +1,8 @@
 import org.gamecontrolplus.*;
 
+int drawCount = 1;
+int swichScene = 0;
+
 int  num = 1;
 int count = 1;
 
@@ -26,19 +29,46 @@ void setup() {
   noStroke();
 }
 
+
 void draw() {
-  int[] controlers = {2, 4, 5, 6};
+  switch(swichScene) {
+  case 0:
+    if (drawCount>=0 && drawCount<=235 && swichScene==0) {
+      swichScene = 0;
+    } else {
+      drawCount=0;
+      swichScene = 1;
+    }
+    drawTitle(20, drawCount);
+    delay(1);
+    drawCount++;
+    break;
+  case 1:
+    drawTitle(200, 20);
+    if (drawCount>40) {
+      swichScene = 2;
+    }
+    drawCount++;
+    break;
+  case 2:
+    background(20);
+    swichScene = 3;
+    break;
+  case 3:
+    int[] controlers = {2, 4, 5, 6};
+    xbox(controlers, num-1, true);
+    /*try {
+     xbox(num);
+     }
+     catch(IndexOutOfBoundsException e) {
+     }
+     num = (num==7)?-1:num;
+     num++;*/
+    break;
+  default :
+  }
 
-  xbox(controlers, num-1, true);
-
-
-  /*try {
-   xbox(num);
-   }
-   catch(IndexOutOfBoundsException e) {
-   }
-   num = (num==7)?-1:num;
-   num++;*/
+  println(swichScene);//drawCount);
 }
 
 void xbox(int[] Controlers, int NUM, boolean test) {
@@ -65,12 +95,6 @@ void xbox(int[] Controlers, int NUM, boolean test) {
     //device2 = control.getDevice("Controller (Xbox 360 Wireless Receiver for Windows)");
     device1.open();
 
-    /*
-    float multiplier = 1;
-     float y;
-     final boolean[] indicators = new boolean[4];
-     final String[] itext = { "left", "right", "up", "down" };
-     */
     hat = device1.getHat(0);
     println(hat);
 
@@ -154,6 +178,22 @@ void drawDeviceNum(int num) {
     text("no device", 20, 60+height/6);
   }
 }
+
+
+void drawTitle(int back, int fill) {
+  background(back);
+  PFont TitleFont = loadFont("Kilowatt-Regular-170.vlw");
+  PFont titleFont = loadFont("Kilowatt-Regular-70.vlw");
+  fill = fill+20;
+  fill(fill);
+  textAlign(CENTER, CENTER);
+  textFont(TitleFont);
+  text("RS         CONTROL         SYSTEM", width/2, height/2-100);
+  textFont(titleFont);
+  text("ATELIE         OF         DRESM", width/2, height/2+200);
+}
+
+
 
 void drawComNum() {
   if (com>=0) {
