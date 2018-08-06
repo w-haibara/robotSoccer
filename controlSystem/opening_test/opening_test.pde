@@ -1,30 +1,53 @@
-int count = 0;
-
+int drawCount = 1;
+int swichScene = 0;
 void setup() {
+  //size(1000, 1000);
   fullScreen();
   background(20);
   noStroke();
 }
 
 void draw() {
-  opening();
+  switch(swichScene) {
+  case 0:
+    if (drawCount>=0 && drawCount<=235 && swichScene==0) {
+      swichScene = 0;
+    } else {
+      drawCount=0;
+      swichScene = 1;
+    }
+    drawTitle(20, drawCount);
+    delay(1);
+    drawCount++;
+    break;
+  case 1:
+    drawTitle(200, 20);
+    if (drawCount>40) {
+      swichScene = 2;
+    }
+    drawCount++;
+    break;
+  case 2:
+    background(0);
+    break;
+  default :
+  }
+
+  println(swichScene);//drawCount);
 }
 
 void opening() {
-  if (count%3==0) {
-    fill(200, 100, 100, 50);
-    rect(0, 0, width, height);
-  }
-  if (count%2==0) {
-    fill(200, 20, 250, 30);
-    rect(0, 0, width, height);
-  }
-  fill(200, 20, 20, 10);
-  rect(0, 0, width, height);
+}
 
-  fill(255);
-  PFont nameFont = loadFont("Kilowatt-Regular-70.vlw");
-  textFont(nameFont);
-  text(count, count, count);
-  count=int(random(0, 1024));
+void drawTitle(int back, int fill) {
+  background(back);
+  PFont TitleFont = loadFont("Kilowatt-Regular-170.vlw");
+  PFont titleFont = loadFont("Kilowatt-Regular-70.vlw");
+  fill = fill+20;
+  fill(fill);
+  textAlign(CENTER, CENTER);
+  textFont(TitleFont);
+  text("RS         CONTROL         SYSTEM", width/2, height/2-100);
+  textFont(titleFont);
+  text("ATELIE         OF         DRESM", width/2, height/2+200);
 }
