@@ -68,7 +68,7 @@ void draw() {
   default :
   }
 
-  println(swichScene);//drawCount);
+  //println(swichScene);//drawCount);
 }
 
 void xbox(int[] Controlers, int NUM, boolean test) {
