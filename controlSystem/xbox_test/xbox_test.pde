@@ -12,6 +12,12 @@ boolean LT = false;
 boolean Buttou1 = false;
 boolean Buttou2 = false;
 
+float x1 = 0;
+float y1 = 0;
+float x2 = 0;
+float y2 = 0;
+float lr = 0;
+
 boolean C1 = false;
 boolean C2 = false;
 boolean C3 = false;
@@ -27,10 +33,9 @@ void setup() {
 }
 
 void draw() {
-  int[] controlers = {2, 4, 5, 6};
+  int[] controlers = {2, 3, 5, 6};
 
-  xbox(controlers, num-1, true);
-
+  xbox(controlers, num-1, false);
 
   /*try {
    xbox(num);
@@ -55,7 +60,7 @@ void xbox(int[] Controlers, int NUM, boolean test) {
   if (!test) {
     ControlIO control;
     ControlDevice device1;    //, device2;
-    ControlButton A, B, X, Y, LB, RB, BACK, START;
+    ControlButton A, B, X, Y, LB, RB, BACK, START, HAT;
     ControlSlider[] sliders = new ControlSlider[5];
 
     ControlHat hat;
@@ -71,8 +76,10 @@ void xbox(int[] Controlers, int NUM, boolean test) {
      final boolean[] indicators = new boolean[4];
      final String[] itext = { "left", "right", "up", "down" };
      */
-    hat = device1.getHat(0);
-    println(hat);
+    //    hat = device1.getHat(0);
+
+    //    println();
+    //    int hat = ControlHat.getPos();
 
     A = device1.getButton(0);
     B = device1.getButton(1);
@@ -82,7 +89,12 @@ void xbox(int[] Controlers, int NUM, boolean test) {
     RB = device1.getButton(5);
     BACK = device1.getButton(6);
     START = device1.getButton(7);
+    HAT  = device1.getButton(10);
     ControlButton[] buttonStatus  ={ A, B, X, Y, RB, LB, BACK, START};
+
+    hat = device1.getHat(10);
+
+    int hatPos = hat.getPos();
 
     sliders[0] = device1.getSlider(0);
     sliders[1] = device1.getSlider(1);
@@ -90,11 +102,47 @@ void xbox(int[] Controlers, int NUM, boolean test) {
     sliders[3] = device1.getSlider(3);
     sliders[4] = device1.getSlider(4);
 
-    float x1 = sliders[1].getValue();
-    float y1 = sliders[0].getValue();
-    float x2 = sliders[3].getValue();
-    float y2 = sliders[2].getValue();
-    float lr = -sliders[4].getValue();
+    if (HAT.pressed()) {
+      text("HAT = " + hatPos, 120+2*100, 120);
+
+      switch(hatPos) {
+      case 1:
+        x1 = -0.7;
+        y1 = -0.7;
+        break;
+      case 2:
+        y1 = -1;
+        break;
+      case 3:
+        x1 = 0.7;
+        y1 = -0.7;
+        break;
+      case 4:
+        x1 = 1;
+        break;
+      case 5:
+        x1 = 0.7;
+        y1 = 0.7;
+        break;
+      case 6:
+        y1 = 1;
+        break;
+      case 7:
+        x1 = -0.7;
+        y1 = 0.7;
+        break;
+      case 8:
+        x1 = -1;
+        break;
+      }
+    } else {
+      x1 = sliders[1].getValue();
+      y1 = sliders[0].getValue();
+    }
+
+    x2 = sliders[3].getValue();
+    y2 = sliders[2].getValue();
+    lr = -sliders[4].getValue();
 
     drawJoy(x1, y1, x2, y2, lr);
 
@@ -137,7 +185,6 @@ void xbox(int[] Controlers, int NUM, boolean test) {
   } while (false);
 
   translate(0, -(height/Controlers.length)*NUM);
-
 
   num++;
   num = (num==5)? 1 : num;
