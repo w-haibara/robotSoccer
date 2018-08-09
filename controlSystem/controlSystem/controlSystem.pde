@@ -1,4 +1,5 @@
 import org.gamecontrolplus.*;
+import websockets.*;
 
 int drawCount = 1;
 int swichScene = 0;
@@ -28,11 +29,22 @@ boolean C4 = false;
 
 int com = -1;
 
+int[] controlers = new int[4];
+
+WebsocketClient wsc = new WebsocketClient(this, "ws://localhost:1880/ws/rs/ControlSystem");
+String message = "";
+int wscCount = 0;
+
 void setup() {
   fullScreen();
   //size(1000, 1000);
   background(20);
   noStroke();
+
+  controlers[0] = 2;
+  controlers[1] = 3;
+  controlers[2] = 5;
+  controlers[3] = 6;
 }
 
 
@@ -47,15 +59,14 @@ void draw() {
     }
     drawTitle(20, drawCount);
     delay(1);
-
     if (mousePressed || keyPressed) {
       drawCount=0;
       background(20);
       swichScene = 3;
     }
-
     drawCount++;
     break;
+
   case 1:
     drawTitle(200, 20);
     if (drawCount>40) {
@@ -66,28 +77,27 @@ void draw() {
       background(20);
       swichScene = 3;
     }
-
     drawCount++;
     break;
+
   case 2:
     background(20);
     swichScene = 3;
     break;
+
   case 3:
-    int[] controlers = new int[4];
-    controlers[0] = 2;
-    controlers[1] = 3;
-    controlers[2] = 5;
-    controlers[3] = 6;
     xbox_main();
-    /*try {
-     xbox(num);
-     }
-     catch(IndexOutOfBoundsException e) {
-     }
-     num = (num==7)?-1:num;
-     num++;*/
+
+
+    if (wscCount == 20) {
+      wsc.sendMessage(message);
+      wscCount = 0;
+      message = "";
+    }
+    wscCount++;
+
     break;
+
   default :
   }
 
@@ -265,6 +275,7 @@ void xbox(int[] Controlers, int NUM, boolean test) {
       for (int i=0; i<=7; i++) {
         if (buttonStatus[i].pressed()) {
           text(buttonName[i], 120+i*100, 60);
+          message = num + "=" + buttonName[i];
         }
       }
       control = null;
