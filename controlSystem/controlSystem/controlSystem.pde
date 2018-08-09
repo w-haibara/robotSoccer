@@ -169,7 +169,7 @@ void xbox(int[] Controlers, int NUM, boolean test) {
     try {
       ControlIO control;
       ControlDevice device1;    //, device2;
-      ControlButton A, B, X, Y, LB, RB, BACK, START, HAT;
+      ControlButton A, B, X, Y, LB, RB, BACK, START, HAT, LPUSH, RPUSH;
       ControlSlider[] sliders = new ControlSlider[5];
 
       ControlHat hat;
@@ -197,8 +197,10 @@ void xbox(int[] Controlers, int NUM, boolean test) {
       RB = device1.getButton(5);
       BACK = device1.getButton(6);
       START = device1.getButton(7);
+      LPUSH = device1.getButton(8);
+      RPUSH = device1.getButton(9); 
       HAT  = device1.getButton(10);
-      ControlButton[] buttonStatus  ={ A, B, X, Y, RB, LB, BACK, START};
+      ControlButton[] buttonStatus  ={ A, B, X, Y, RB, LB, BACK, START, LPUSH, RPUSH};
 
       hat = device1.getHat(10);
 
@@ -254,10 +256,10 @@ void xbox(int[] Controlers, int NUM, boolean test) {
 
       drawJoy();
 
-      String[] buttonName  ={ "A", "B", "X", "Y", "RB", "LB", "BACK", "START"};
-      for (int i=0; i<=7; i++) {
+      String[] buttonName  ={ "A", "B", "X", "Y", "RB", "LB", "BACK", "START", "LPUSH", "RPUSH"};
+      for (int i=0; i<=9; i++) {
         if (buttonStatus[i].pressed()) {
-          text(buttonName[i], 120+i*100, 60);
+          text(buttonName[i], 120+i*80, 60);
           wscMessage[num-1] = buttonName[i];
         }
       }
