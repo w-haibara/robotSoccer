@@ -143,7 +143,7 @@ void xbox(int[] Controlers, int NUM, boolean test) {
       y2 = sliders[2].getValue();
       lr = -sliders[4].getValue();
 
-      drawJoy(x1, y1, x2, y2, lr);
+      drawJoy();
 
       String[] buttonName  ={ "A", "B", "X", "Y", "RB", "LB", "BACK", "START"};
       for (int i=0; i<=7; i++) {
@@ -151,7 +151,6 @@ void xbox(int[] Controlers, int NUM, boolean test) {
           text(buttonName[i], 120+i*100, 60);
         }
       }
-      control = null;
     }
     catch(java.lang.RuntimeException e) {
       fill(20); 
@@ -162,16 +161,16 @@ void xbox(int[] Controlers, int NUM, boolean test) {
       text("the device is not available 3", 120+4*100, 60);
     }
   } else {
-    float x1 = 0;
-    float y1 = 0;
-    float x2 = 0;
-    float y2 = 0;
-    float lr = 0;
+    x1 = 0;
+    y1 = 0;
+    x2 = 0;
+    y2 = 0;
+    lr = 0;
 
     //    lr = (float((mouseX-width/4)*5)/width);
     //    y1 = float(mouseY-height/2+390)/100;
 
-    drawJoy(x1, y1, x2, y2, lr);
+    drawJoy();
 
     String[] buttonName  ={ "A", "B", "X", "Y", "RB", "LB", "BACK", "START"};
 
@@ -203,9 +202,9 @@ void xbox(int[] Controlers, int NUM, boolean test) {
   getKeyStatus();
 }
 
-void drawDeviceNum(int num) {
-  if (num>=0) {
-    text("device "+num, 20, 60+height/6);
+void drawDeviceNum(int devNum) {
+  if (devNum>=0) {
+    text("device "+devNum, 20, 60+height/6);
   } else {
     text("no device", 20, 60+height/6);
   }
@@ -219,7 +218,7 @@ void drawComNum() {
   }
 }
 
-void drawJoy(float x1, float y1, float x2, float y2, float lr) {
+void drawJoy() {
   ellipse(x1*100+width/4-200, y1*100+height/2-390, 8, 8);
   ellipse(x2*100+width/4+200, y2*100+height/2-390, 8, 8);
   rect(lr*300+width/4, height/2-430, 20, 20);

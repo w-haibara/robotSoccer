@@ -1,4 +1,4 @@
-import org.gamecontrolplus.*;
+import org.gamecontrolplus.*; //<>//
 import websockets.*;
 
 int drawCount = 1;
@@ -29,22 +29,20 @@ boolean C4 = false;
 
 int com = -1;
 
-int[] controlers = new int[4];
-
-WebsocketClient wsc = new WebsocketClient(this, "ws://localhost:1880/ws/rs/ControlSystem");
-String message = "";
 int wscCount = 0;
+String[] wscMessage = {"", "", "", ""};
+String wscUrl[] = 
+  {"ws://localhost:1880/ws/rs/1"
+  , "ws://localhost:1880/ws/rs/2"
+  , "ws://localhost:1880/ws/rs/3"
+  , "ws://localhost:1880/ws/rs/4"};
+
 
 void setup() {
   fullScreen();
   //size(1000, 1000);
   background(20);
   noStroke();
-
-  controlers[0] = 2;
-  controlers[1] = 3;
-  controlers[2] = 5;
-  controlers[3] = 6;
 }
 
 
@@ -88,13 +86,27 @@ void draw() {
   case 3:
     xbox_main();
 
-
-    if (wscCount == 20) {
-      wsc.sendMessage(message);
+    if (wscCount == 100) {
+      sendWebsocket(num-1); 
+      println(num);
+    }
+    if (wscCount == 101) {
+      sendWebsocket(num-1); 
+      println(num);
+    }
+    if (wscCount == 102) {
+      sendWebsocket(num-1); 
+      println(num);
+    }
+    if (wscCount == 103) {
+      sendWebsocket(num-1); 
+      println(num);
       wscCount = 0;
-      message = "";
     }
     wscCount++;
+
+    num++;
+    num = (num==5)? 1 : num;
 
     break;
 
@@ -104,6 +116,20 @@ void draw() {
   //println(swichScene);//drawCount);
 }
 
+void sendWebsocket(int wscNum) {
+  WebsocketClient wsc = new WebsocketClient(this, wscUrl[wscNum]);
+
+  //wsc.sendMessage("hi");
+
+
+  if (0<=wscNum && wscNum<=3) {
+    //wscMessage[wscNum] = (wscNum) + "=" + wscMessage[wscNum];
+    wsc.sendMessage(wscMessage[wscNum]);
+    wscMessage[wscNum] = "";
+  } else {
+    println("[websocket, wscNum] is illegal value");
+  }
+}
 
 void drawTitle(int back, int fill) {
   background(back);
@@ -116,49 +142,6 @@ void drawTitle(int back, int fill) {
   text("RS         CONTROL         SYSTEM", width/2, height/2-100);
   textFont(titleFont);
   text("ATELIE         OF         DRESM", width/2, height/2+200);
-}
-
-
-void getKeyStatus() {
-  Up = (key=='w')? true: false;
-  Down = (key=='s')? true: false;
-  Right = (key=='d')? true: false;
-  Left = (key=='a')? true: false;
-  RT = (key=='q')? true: false;
-  LT = (key=='e')? true: false;
-  Buttou1 = (key=='z')? true: false;
-  Buttou2 = (key=='c')? true: false;
-
-  switch(key) {
-  case '1':
-    C1 = true;
-    break;
-  case '2':
-    C2 = true;
-    break;
-  case '3':
-    C3 = true;
-    break;
-  case '4':
-    C4 = true;
-    break;
-  }
-}
-
-void keyPressed() {
-}
-
-void printBoolean() {
-  /*
-  println("Up : "+Up);
-   println("Down : "+Down);
-   println("Right : "+Right);
-   println("Left : "+Left);
-   println("RT : "+RT);
-   println("LT : "+LT);
-   println("Buttou1 : "+Buttou1);
-   println("Buttou2 : "+Buttou2);
-   */
 }
 
 
@@ -269,16 +252,15 @@ void xbox(int[] Controlers, int NUM, boolean test) {
       y2 = sliders[2].getValue();
       lr = -sliders[4].getValue();
 
-      drawJoy(x1, y1, x2, y2, lr);
+      drawJoy();
 
       String[] buttonName  ={ "A", "B", "X", "Y", "RB", "LB", "BACK", "START"};
       for (int i=0; i<=7; i++) {
         if (buttonStatus[i].pressed()) {
           text(buttonName[i], 120+i*100, 60);
-          message = num + "=" + buttonName[i];
+          wscMessage[num-1] = buttonName[i];
         }
       }
-      control = null;
     }
     catch(java.lang.RuntimeException e) {
       fill(20); 
@@ -289,16 +271,16 @@ void xbox(int[] Controlers, int NUM, boolean test) {
       text("the device is not available 3", 120+4*100, 60);
     }
   } else {
-    float x1 = 0;
-    float y1 = 0;
-    float x2 = 0;
-    float y2 = 0;
-    float lr = 0;
+    x1 = 0;
+    y1 = 0;
+    x2 = 0;
+    y2 = 0;
+    lr = 0;
 
     //    lr = (float((mouseX-width/4)*5)/width);
     //    y1 = float(mouseY-height/2+390)/100;
 
-    drawJoy(x1, y1, x2, y2, lr);
+    drawJoy();
 
     String[] buttonName  ={ "A", "B", "X", "Y", "RB", "LB", "BACK", "START"};
 
@@ -322,19 +304,17 @@ void xbox(int[] Controlers, int NUM, boolean test) {
 
   translate(0, -(height/Controlers.length)*NUM);
 
-  num++;
-  num = (num==5)? 1 : num;
 
   count++;
   printBoolean();
   getKeyStatus();
 }
 
-void drawDeviceNum(int num) {
-  if (num>=0) {
-    text("device "+num, 70, 60+height/6);
+void drawDeviceNum(int devNum) {
+  if (devNum>=0) {
+    text("device "+devNum, 20, 60+height/6);
   } else {
-    text("no device", 70, 60+height/6);
+    text("no device", 20, 60+height/6);
   }
 }
 
@@ -346,8 +326,50 @@ void drawComNum() {
   }
 }
 
-void drawJoy(float x1, float y1, float x2, float y2, float lr) {
+void drawJoy() {
   ellipse(x1*100+width/4-200, y1*100+height/2-390, 8, 8);
   ellipse(x2*100+width/4+200, y2*100+height/2-390, 8, 8);
   rect(lr*300+width/4, height/2-430, 20, 20);
+}
+
+void getKeyStatus() {
+  Up = (key=='w')? true: false;
+  Down = (key=='s')? true: false;
+  Right = (key=='d')? true: false;
+  Left = (key=='a')? true: false;
+  RT = (key=='q')? true: false;
+  LT = (key=='e')? true: false;
+  Buttou1 = (key=='z')? true: false;
+  Buttou2 = (key=='c')? true: false;
+
+  switch(key) {
+  case '1':
+    C1 = true;
+    break;
+  case '2':
+    C2 = true;
+    break;
+  case '3':
+    C3 = true;
+    break;
+  case '4':
+    C4 = true;
+    break;
+  }
+}
+
+void keyPressed() {
+}
+
+void printBoolean() {
+  /*
+  println("Up : "+Up);
+   println("Down : "+Down);
+   println("Right : "+Right);
+   println("Left : "+Left);
+   println("RT : "+RT);
+   println("LT : "+LT);
+   println("Buttou1 : "+Buttou1);
+   println("Buttou2 : "+Buttou2);
+   */
 }
