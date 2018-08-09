@@ -33,18 +33,18 @@ void setup() {
 }
 
 void draw() {
-  int[] controlers = {2, 3, 5, 6};
-  try {
-    xbox(controlers, num-1, false);
-  }
-  catch(java.lang.RuntimeException e) {
-    fill(20); 
-    int rectX = 120+700+100;
-    int rectY = height/4;
-    rect(0, 0, rectX, rectY);
-    text("the device is not available", 120+4*100, 60);
-  }
+  xbox_main();
 }
+
+void xbox_main() {
+  int[] controlers = new int[4];
+  controlers[0] = 2;
+  controlers[1] = 3;
+  controlers[2] = 5;
+  controlers[3] = 6;
+  xbox(controlers, num-1, false);
+}
+
 void xbox(int[] Controlers, int NUM, boolean test) {
   translate(0, (height/Controlers.length)*NUM);
   fill(255);
@@ -80,7 +80,6 @@ void xbox(int[] Controlers, int NUM, boolean test) {
 
       //    println();
       //    int hat = ControlHat.getPos();
-
       A = device1.getButton(0);
       B = device1.getButton(1);
       X = device1.getButton(2);
@@ -152,16 +151,15 @@ void xbox(int[] Controlers, int NUM, boolean test) {
           text(buttonName[i], 120+i*100, 60);
         }
       }
-      if (count%10==0) {
-        device1.close();
-      }
+      control = null;
     }
     catch(java.lang.RuntimeException e) {
       fill(20); 
       int rectX = 120+700+100;
       int rectY = height/4;
       rect(0, 0, rectX, rectY);
-      text("the device is not available", 120+4*100, 60);
+      fill(255);
+      text("the device is not available 3", 120+4*100, 60);
     }
   } else {
     float x1 = 0;
