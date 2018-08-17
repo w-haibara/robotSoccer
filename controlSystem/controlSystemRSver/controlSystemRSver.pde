@@ -1,5 +1,9 @@
-import org.gamecontrolplus.*; //<>// //<>//
-import websockets.*;
+import org.gamecontrolplus.*; //<>//
+import processing.serial.*;
+
+int comNum = 5;
+Serial myPort = new Serial(this, "COM" + comNum, 9600);//115200);
+byte serialData = 0b00000000;
 
 int drawCount = 1;
 int swichScene = 0;
@@ -13,35 +17,11 @@ boolean Right = false;
 boolean Left = false;
 boolean RT = false;
 boolean LT = false;
-boolean Buttou1 = false;
+boolean Button1 = false;
+boolean Button2 = false;
 
 float x1 = 0;
 float y1 = 0;
-float x2 = 0;
-float y2 = 0;
-float lr = 0;
-
-boolean C1 = false;
-boolean C2 = false;
-boolean C3 = false;
-boolean C4 = false;
-
-int com = -1;
-
-int wscCount = 0;
-String[] wscMessage1 = {"0", "0", "0", "0"};
-String[] old_wscMessage1 = {"0", "0", "0", "0"};
-
-String wscUrl[] = 
-  {"ws://localhost:1880/ws/rs/1"
-  , "ws://localhost:1880/ws/rs/2"
-  , "ws://localhost:1880/ws/rs/3"
-  , "ws://localhost:1880/ws/rs/4"};
-
-
-int strt = 0;
-int finish = 0;
-int loopTime = 0;
 
 void setup() {
   fullScreen();
@@ -91,31 +71,15 @@ void draw() {
 
   case 3:
     xbox_main();
-    /*int wscTimer = 10;
-     if (wscCount == wscTimer) {
-     sendWebsocket(0); 
-     wscCount = 0;
-     }
-     wscCount++;
-     */
-    System.gc();
-
-/*
-    loopTime =  millis()-finish;
-
-
-    int dtime = 30-loopTime;
-    if (dtime >= 0) {
-      delay(dtime);
-   //   println(dtime + ">=0");
+    if (x1>0) {
+      serialData = 1;
     } else {
- //     println(dtime + "<0");
+      serialData = 0;
     }
+    myPort.write(serialData);
 
-    finish = millis();
-    println(dtime);
-    */
-    
+    System.gc();
+    delay(5);
     break;
 
   default :
@@ -124,30 +88,6 @@ void draw() {
   //println(swichScene);//drawCount);
 }
 
-void sendWebsocket(int wscNumber) {
-
-  WebsocketClient wsc = new WebsocketClient(this, wscUrl[0]);/////////////////////wscNumber]);
-
-  //wsc.sendMessage("hi");
-
-  if (0<=wscNumber && wscNumber<=3) {
-    //wscMessage1[wscNumber] = (wscNumber) + "=" + wscMessage1[wscNumber];
-    if (wscMessage1 == old_wscMessage1) {
-      /**************************************************************
-       wsc.sendMessage(wscMessage1[wscNumber]);
-       println(wscNumber + " : " + wscMessage1[wscNumber]);
-       old_wscMessage1[wscNumber] = wscMessage1[wscNumber];
-       wscMessage1[wscNumber] = "0";
-       **************************************************************/
-      wsc.sendMessage(wscMessage1[0]);
-      println(0 + " : " + wscMessage1[0]);
-      old_wscMessage1[0] = wscMessage1[0];
-      wscMessage1[0] = "0";
-    }
-  } else {
-    println("[websocket, wscNum] is illegal value");
-  }
-}
 
 void drawTitle(int back, int fill) {
   background(back);
@@ -186,8 +126,8 @@ void xbox(int[] Controlers, int NUM, boolean test) {
     try {
       ControlIO control;
       ControlDevice device1;    //, device2;
-      ControlButton A, B, X, Y, LB, RB, BACK, START, HAT;
-      ControlSlider[] sliders = new ControlSlider[5];
+      ControlButton A, B, X, Y, HAT;
+      ControlSlider[] sliders = new ControlSlider[2];
 
       ControlHat hat;
 
@@ -196,26 +136,11 @@ void xbox(int[] Controlers, int NUM, boolean test) {
       //device2 = control.getDevice("Controller (Xbox 360 Wireless Receiver for Windows)");
       device1.open();
 
-      /*
-    float multiplier = 1;
-       float y;
-       final boolean[] indicators = new boolean[4];
-       final String[] itext = { "left", "right", "up", "down" };
-       */
-      //    hat = device1.getHat(0);
-
-      //    println();
-      //    int hat = ControlHat.getPos();
       A = device1.getButton(0);
       B = device1.getButton(1);
       X = device1.getButton(2);
       Y = device1.getButton(3);
-      LB = device1.getButton(4);
-      RB = device1.getButton(5);
-      BACK = device1.getButton(6);
-      START = device1.getButton(7);
       HAT  = device1.getButton(10);
-      ControlButton[] buttonStatus  ={ A, B, X, Y, RB, LB, BACK, START};
 
       hat = device1.getHat(10);
 
@@ -223,9 +148,6 @@ void xbox(int[] Controlers, int NUM, boolean test) {
 
       sliders[0] = device1.getSlider(0);
       sliders[1] = device1.getSlider(1);
-      sliders[2] = device1.getSlider(2);
-      sliders[3] = device1.getSlider(3);
-      sliders[4] = device1.getSlider(4);
 
       if (HAT.pressed()) {
         text("HAT = " + hatPos, 820, 120);
@@ -265,17 +187,22 @@ void xbox(int[] Controlers, int NUM, boolean test) {
         y1 = sliders[0].getValue();
       }
 
-      x2 = sliders[3].getValue();
-      y2 = sliders[2].getValue();
-      lr = -sliders[4].getValue();
-
       drawJoy();
 
-      String[] buttonName  ={ "A", "B", "X", "Y", "RB", "LB", "BACK", "START"};
-      for (int i=0; i<=7; i++) {
-        if (buttonStatus[i].pressed()) {
-          text(buttonName[i], 120+i*100, 60);
-        }
+      if (A.pressed() || X.pressed()) {
+        text("A", 120+100, 60);
+        text("X", 120+300, 60);
+        Button1 = true;
+      } else {
+        Button1 = false;
+      }
+
+      if (B.pressed() || Y.pressed()) {
+        text("B", 120+200, 60);
+        text("Y", 120+400, 60);
+        Button1 = true;
+      } else {
+        Button1 = false;
       }
     }
     catch(java.lang.RuntimeException e) {
@@ -289,12 +216,6 @@ void xbox(int[] Controlers, int NUM, boolean test) {
   } else {
     x1 = 0;
     y1 = 0;
-    x2 = 0;
-    y2 = 0;
-    lr = 0;
-
-    //    lr = (float((mouseX-width/4)*5)/width);
-    //    y1 = float(mouseY-height/2+390)/100;
 
     drawJoy();
 
@@ -328,15 +249,15 @@ void xbox(int[] Controlers, int NUM, boolean test) {
 
 void drawDeviceNum(int devNum) {
   if (devNum>=0) {
-    text("device "+devNum, 20, 60+height/6);
+    text("device "+devNum, 60, 60+height/6);
   } else {
     text("no device", 20, 60+height/6);
   }
 }
 
 void drawComNum() {
-  if (com>=0) {
-    text("COM "+com, width/2-140, 60+height/6);
+  if (comNum>=0) {
+    text("COM "+comNum, width/2-140, 60+height/6);
   } else {
     text("no port", width/2-160, 60+height/6);
   }
@@ -344,6 +265,4 @@ void drawComNum() {
 
 void drawJoy() {
   ellipse(x1*100+width/4-200, y1*100+height/2-390, 8, 8);
-  ellipse(x2*100+width/4+200, y2*100+height/2-390, 8, 8);
-  rect(lr*300+width/4, height/2-430, 20, 20);
 }
