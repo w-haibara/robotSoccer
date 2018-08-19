@@ -1,9 +1,9 @@
 import org.gamecontrolplus.*; //<>//
 import processing.serial.*;
 
-int comNum = 5;
-Serial myPort = new Serial(this, "COM" + comNum, 9600);//115200);
-byte serialData = 0b00000000;
+int comNum = -1;
+Serial myPort;
+byte serialData = 0x00;
 
 int drawCount = 1;
 int swichScene = 0;
@@ -11,12 +11,6 @@ int swichScene = 0;
 int  num = 1;
 int count = 1;
 
-boolean Up = false;
-boolean Down = false;
-boolean Right = false;
-boolean Left = false;
-boolean RT = false;
-boolean LT = false;
 boolean Button1 = false;
 boolean Button2 = false;
 
@@ -34,8 +28,6 @@ void draw() {
   switch(swichScene) {
   case 0:
     if (drawCount>=0 && drawCount<=235 && swichScene==0) {
-
-
       swichScene = 0;
     } else {
       drawCount=0;
@@ -46,7 +38,7 @@ void draw() {
     if (mousePressed || keyPressed) {
       drawCount=0;
       background(20);
-      swichScene = 3;
+      swichScene = 2;
     }
     drawCount += 4;
     break;
@@ -59,7 +51,7 @@ void draw() {
     if (mousePressed || keyPressed) {
       drawCount=0;
       background(20);
-      swichScene = 3;
+      swichScene = 2;
     }
     drawCount++;
     break;
@@ -70,13 +62,16 @@ void draw() {
     break;
 
   case 3:
+    //    seekCom();
+    swichScene = 4;
+    break;
+
+  case 4:
     xbox_main();
-    if (x1>0) {
-      serialData = 1;
-    } else {
-      serialData = 0;
-    }
-    myPort.write(serialData);
+
+    //  myPort = new Serial(this, "COM3", 9600);
+
+    sendSerial();
 
     System.gc();
     delay(5);
@@ -84,8 +79,6 @@ void draw() {
 
   default :
   }
-
-  //println(swichScene);//drawCount);
 }
 
 
@@ -100,6 +93,74 @@ void drawTitle(int back, int fill) {
   text("RS         CONTROL         SYSTEM", width/2, height/2-100);
   textFont(titleFont);
   text("ATELIE         OF         DRESM", width/2, height/2+200);
+}
+
+/*
+void seekCom() {
+ String[] portList = myPort.list ();
+ printArray(Serial.list());
+ if (portList.length>0) {
+ for (int i=0; i<portList.length; i++) {
+ print(portList[i]);
+ try {
+ myPort = new Serial(this, portList[i], 9600);
+ println("success");
+ comNum = i;
+ }
+ catch(Exception e) {
+ println("failed");
+ }
+ }
+ } else if (portList.length==0) {
+ println("no available COM port");
+ }
+ }
+ */
+
+void sendSerial() {
+  serialData = 0x00;
+  print("device" + num + " COM" + comNum + "  ");
+  if (x1<0) {
+    serialData |= 0x4;
+  }
+  switch(int(abs(x1))) {
+  case 33:
+    serialData |= 0x1;
+    break;
+  case 66:
+    serialData |= 0x2;
+    break;
+  case 100:
+    serialData |= 0x3;
+    break;
+  default:
+  }
+  if (y1<0) {
+    serialData |= 0x20;
+  }
+  switch(int(abs(y1))) {
+  case 33:
+    serialData |= 0x08;
+    break;
+  case 66:
+    serialData |= 0x10;
+    break;
+  case 100:
+    serialData |= 0x18;
+    break;
+  default:
+  }
+  if (Button1==true) {    
+    serialData |= 0x40;
+  }
+  if (Button2==true) {
+    serialData |= 0x80;
+  }
+
+  if (comNum>=0) {
+    myPort.write(serialData);
+  }
+  println("serialData : " + binary(serialData) + " / x:"+x1+"/y:"+y1+"/B1"+Button1+"/B2"+Button2);
 }
 
 void xbox_main() {
@@ -120,7 +181,6 @@ void xbox(int[] Controlers, int NUM, boolean test) {
   text(num, 20, 60);
 
   drawDeviceNum(Controlers[num-1]);
-  drawComNum();
 
   if (!test) {
     try {
@@ -187,7 +247,10 @@ void xbox(int[] Controlers, int NUM, boolean test) {
         y1 = sliders[0].getValue();
       }
 
-      drawJoy();
+      x1 = (int(x1*3)/3.0)*100;
+      y1 = (int(y1*3)/3.0)*100;
+
+      ellipse(x1+width/4-200, y1+height/2-390, 8, 8);
 
       if (A.pressed() || X.pressed()) {
         text("A", 120+100, 60);
@@ -200,9 +263,9 @@ void xbox(int[] Controlers, int NUM, boolean test) {
       if (B.pressed() || Y.pressed()) {
         text("B", 120+200, 60);
         text("Y", 120+400, 60);
-        Button1 = true;
+        Button2 = true;
       } else {
-        Button1 = false;
+        Button2 = false;
       }
     }
     catch(java.lang.RuntimeException e) {
@@ -214,10 +277,9 @@ void xbox(int[] Controlers, int NUM, boolean test) {
       text("the device is not available 3", 120+4*100, 60);
     }
   } else {
+
     x1 = 0;
     y1 = 0;
-
-    drawJoy();
 
     String[] buttonName  ={ "A", "B", "X", "Y", "RB", "LB", "BACK", "START"};
 
@@ -226,7 +288,7 @@ void xbox(int[] Controlers, int NUM, boolean test) {
     }
   }
 
-  fill(20, 80); 
+  fill(20, 120); 
   int rectX = 120+700+100;
   int rectY = height/4;
 
@@ -261,8 +323,4 @@ void drawComNum() {
   } else {
     text("no port", width/2-160, 60+height/6);
   }
-}
-
-void drawJoy() {
-  ellipse(x1*100+width/4-200, y1*100+height/2-390, 8, 8);
 }
