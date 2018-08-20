@@ -12,11 +12,6 @@ boolean B = false;
 void setup() {
   background(255);
   size(100, 100);
-
-  L = false;
-  R = false;
-  F = false;
-  B = false;
 }
 
 void draw() {
@@ -62,7 +57,7 @@ void getKeyStatus() {
   if (!L && !R && !F && !B && !Button1 && !Button2) {
     print("not pressed");
   }
-  print(" x1:"+x1+" y1:"+y1);
+  print(" x1:"+x1+""+y1);
 }
 
 void keyPressed() {

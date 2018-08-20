@@ -12,15 +12,25 @@ int swichScene = 0;
 int  num = 1;
 int count = 1;
 
+boolean Hat = false;
 boolean Button1 = false;
 boolean Button2 = false;
+
+int hatPos = 0;
 
 float x1 = 0;
 float y1 = 0;
 
+boolean L = false;
+boolean R = false;
+boolean F = false;
+boolean B = false;
+
+int slave = 1;
+
 void setup() {
   fullScreen();
-  //  size(50, 50);
+  //size(1200, 1000);
   background(20);
   noStroke();
 }
@@ -172,6 +182,7 @@ void xbox_main() {
   controlers[1] = 3;
   controlers[2] = 5;
   controlers[3] = 6;
+  getKeyStatus();
   xbox(controlers, num-1, false);
 }
 
@@ -207,14 +218,13 @@ void xbox(int[] Controlers, int NUM, boolean test) {
 
       hat = device1.getHat(10);
 
-      int hatPos = hat.getPos();
+      hatPos = hat.getPos();
 
       sliders[0] = device1.getSlider(0);
       sliders[1] = device1.getSlider(1);
 
       if (HAT.pressed()) {
-        text("HAT = " + hatPos, 820, 120);
-
+        Hat = true;
         switch(hatPos) {
         case 1:
           x1 = -0.7;
@@ -246,26 +256,18 @@ void xbox(int[] Controlers, int NUM, boolean test) {
           break;
         }
       } else {
+        Hat = false;
         x1 = sliders[1].getValue();
         y1 = sliders[0].getValue();
       }
 
-      x1 = (int(x1*3)/3.0)*100;
-      y1 = (int(y1*3)/3.0)*100;
-
-      ellipse(x1+width/4-200, y1+height/2-390, 8, 8);
-
       if (A.pressed() || X.pressed()) {
-        text("A", 120+100, 60);
-        text("X", 120+300, 60);
         Button1 = true;
       } else {
         Button1 = false;
       }
 
       if (B.pressed() || Y.pressed()) {
-        text("B", 120+200, 60);
-        text("Y", 120+400, 60);
         Button2 = true;
       } else {
         Button2 = false;
@@ -277,7 +279,10 @@ void xbox(int[] Controlers, int NUM, boolean test) {
       int rectY = height/4;
       rect(0, 0, rectX, rectY);
       fill(255);
-      text("the device is not available 3", 120+4*100, 60);
+      text("the device is not available 3", width/4, height/8);
+    }
+    if (slave == num) {
+      drawControlerStatus();
     }
   } else {
 
@@ -325,5 +330,128 @@ void drawComNum() {
     text("COM "+comNum, width/2-140, 60+height/6);
   } else {
     text("no port", width/2-160, 60+height/6);
+  }
+}
+
+void drawControlerStatus() {
+  x1 = (int(x1*3)/3.0)*100;
+  y1 = (int(y1*3)/3.0)*100;
+
+  ellipse(x1+width/4-200, y1+height/2-390, 8, 8);
+
+  if (Hat) {
+    text("HAT = " + hatPos, 820, 120);
+  }
+  if (Button1) {
+    text("A", 120+100, 60);
+    text("X", 120+300, 60);
+  }
+  if (Button2) {
+    text("B", 120+200, 60);
+    text("Y", 120+400, 60);
+  }
+}
+
+void getKeyStatus() {
+  x1 = 0;
+  y1 = 0;
+  println("");
+  if (R) {
+    x1 = 1;
+    hatPos = 4;
+    print("LEFT  ");
+  } else if (L) {
+    x1 = -1;
+    hatPos = 8;
+    print("RIGHT  ");
+  }
+  if (F) {
+    y1 = -1;
+    hatPos = 2;
+    print("FORW  ");
+  } else if (B) {
+    y1 = 1;
+    hatPos = 6;
+    print("BACK  ");
+  }
+  if (R && (F || B)) {
+    x1 = 0.7;    
+    hatPos = 3;
+  }  
+  if (L && (F || B)) {
+    x1 = -0.7;
+    hatPos = 4;
+  }
+  if ((L || R) && F) {
+    y1 = -0.7;
+  }  
+  if ((L || R) && B) {
+    y1 = 0.7;
+  }
+  if (Button1) {
+    print("Button1");
+  }
+  if (Button2) {
+    print("Button2");
+  }
+  if (!L && !R && !F && !B && !Button1 && !Button2) {
+    print("not pressed");
+  }
+  print(" x1:"+x1+" y1:"+y1);
+}
+
+void keyPressed() {
+  switch(key) {
+  case '1':
+    slave = 1;
+    break;
+  case '2':
+    slave = 2;
+    break;
+  case '3':
+    slave = 3;
+    break;
+  case '4':
+    slave = 4;
+    break;
+  default:
+  }
+  if (!R && key=='a') {
+    L = true;
+    Hat = true;
+  }
+  if (!L && key=='d') {
+    R = true;
+    Hat = true;
+  }
+  if (!B && key=='w') {
+    F = true;
+    Hat = true;
+  }
+  if (!F && key=='s') {
+    B = true;
+    Hat = true;
+  }
+  if (!Button2 && key=='i') {
+    Button1 = true;
+  }
+  if (!Button1 && key=='o') {
+    Button2 = true;
+  }
+}
+void keyReleased() {
+  if (key=='a' || key=='d') {
+    L = false;
+    R = false;
+    Hat = false;
+  }
+  if (key=='w' || key=='s') {
+    F = false;
+    B = false;
+    Hat = false;
+  }
+  if (key=='i' || key=='o') {
+    Button1 = false;
+    Button2 = false;
   }
 }
