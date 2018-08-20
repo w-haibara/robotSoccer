@@ -1,8 +1,9 @@
 import org.gamecontrolplus.*; //<>//
 import processing.serial.*;
 
-int comNum = -1;
-Serial myPort;
+int comNum = 3;
+Serial myPort; //= new Serial(this, "COM"+comNum, 9600);
+
 byte serialData = 0x00;
 
 int drawCount = 1;
@@ -69,9 +70,8 @@ void draw() {
   case 4:
     xbox_main();
 
-    //  myPort = new Serial(this, "COM3", 9600);
 
-    sendSerial();
+    // sendSerial();
 
     System.gc();
     delay(5);
@@ -158,6 +158,9 @@ void sendSerial() {
   }
 
   if (comNum>=0) {
+    if (num==1) {
+      myPort.write("H");
+    }
     myPort.write(serialData);
   }
   println("serialData : " + binary(serialData) + " / x:"+x1+"/y:"+y1+"/B1"+Button1+"/B2"+Button2);
