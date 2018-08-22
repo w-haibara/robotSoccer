@@ -1,6 +1,8 @@
 import org.gamecontrolplus.*; //<>//
 import processing.serial.*;
 
+boolean xboxSuccess = false;
+
 int comNum = 3;
 Serial myPort= new Serial(this, "COM"+comNum, 9600);
 
@@ -192,10 +194,11 @@ void xbox_main() {
     x1 = x1_key;
     y1 = y1_key;
   }
-
-  drawControlerStatus(controlers, num-1);
+  if (xboxSuccess) {
+    drawControlerStatus(controlers, num-1);
+  }
   sendSerial();
-
+  println(xboxSuccess);
   num++;
   num = (num==5)? 1 : num;
 }
@@ -276,14 +279,10 @@ void xbox(int[] Controlers) {
     } else {
       Button2 = false;
     }
+    xboxSuccess = true;
   }
   catch(java.lang.RuntimeException e) {
-    fill(20); 
-    int rectX = 120+700+100;
-    int rectY = height/4;
-    rect(0, 0, rectX, rectY);
-    fill(255);
-    text("the device is not available 3", width/4, height/8);
+    xboxSuccess = false;
   }
 }
 
@@ -312,38 +311,45 @@ void drawControlerStatus(int[] Controlers, int NUM) {
   fill(255);
   PFont nameFont = loadFont("Kilowatt-Regular-70.vlw");
   textFont(nameFont);
+  if (xboxSuccess) {
+    text(num, 20, 60);
 
-  text(num, 20, 60);
+    drawDeviceNum(Controlers[num-1]);
 
-  drawDeviceNum(Controlers[num-1]);
+    x1 = (int(x1*3)/3.0)*100;
+    y1 = (int(y1*3)/3.0)*100;
 
-  x1 = (int(x1*3)/3.0)*100;
-  y1 = (int(y1*3)/3.0)*100;
+    ellipse(x1+width/4-200, y1+height/2-390, 8, 8);
 
-  ellipse(x1+width/4-200, y1+height/2-390, 8, 8);
+    if (Hat) {
+      text("HAT = " + hatPos, 820, 120);
+    }
+    if (Button1) {
+      text("A", 120+100, 60);
+      text("X", 120+300, 60);
+    }
+    if (Button2) {
+      text("B", 120+200, 60);
+      text("Y", 120+400, 60);
+    }
 
-  if (Hat) {
-    text("HAT = " + hatPos, 820, 120);
+    fill(20, 120); 
+    int rectX = 120+700+100;
+    int rectY = height/4;
+    rect(0, 0, rectX, rectY);
+
+    noFill();
+    stroke(255);
+    rect(0, 0, rectX, rectY);
+    noStroke();
+  } else {
+    fill(20); 
+    int rectX = 120+700+100;
+    int rectY = height/4;
+    rect(0, 0, rectX, rectY);
+    fill(255);
+    text("the device is not available 3", width/4, height/8);
   }
-  if (Button1) {
-    text("A", 120+100, 60);
-    text("X", 120+300, 60);
-  }
-  if (Button2) {
-    text("B", 120+200, 60);
-    text("Y", 120+400, 60);
-  }
-
-  fill(20, 120); 
-  int rectX = 120+700+100;
-  int rectY = height/4;
-  rect(0, 0, rectX, rectY);
-
-  noFill();
-  stroke(255);
-  rect(0, 0, rectX, rectY);
-  noStroke();
-
   translate(0, -(height/Controlers.length)*NUM);
 }
 
