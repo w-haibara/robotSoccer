@@ -23,7 +23,6 @@ boolean Button2_key = false;
 float x1_key = 0;
 float y1_key = 0;
 
-
 boolean L = false;
 boolean R = false;
 boolean F = false;
@@ -82,9 +81,6 @@ void draw() {
 
   case 4:
     xbox_main();
-
-    sendSerial();
-
     System.gc();
     delay(5);
     break;
@@ -92,7 +88,6 @@ void draw() {
   default :
   }
 }
-
 
 void drawTitle(int back, int fill) {
   background(back);
@@ -133,17 +128,17 @@ void sendSerial() {
   serialData = 0x00;
   //  print("device" + num + " COM" + comNum + "  ");
   if (x1<0) {
-    serialData |= 0x4;
+    serialData |= 0x04;
   }
   switch(int(abs(x1))) {
   case 33:
-    serialData |= 0x1;
+    serialData |= 0x01;
     break;
   case 66:
-    serialData |= 0x2;
+    serialData |= 0x02;
     break;
   case 100:
-    serialData |= 0x3;
+    serialData |= 0x03;
     break;
   default:
   }
@@ -199,6 +194,8 @@ void xbox_main() {
   }
 
   drawControlerStatus(controlers, num-1);
+  sendSerial();
+
   num++;
   num = (num==5)? 1 : num;
 }
@@ -415,6 +412,7 @@ void keyPressed() {
     Button2_key = true;
   }
 }
+
 void keyReleased() {
   if (key=='a' || key=='d') {
     L = false;
