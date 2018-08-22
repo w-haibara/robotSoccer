@@ -22,23 +22,25 @@ void loop() {
     int pwm_x = 0;
     int pwm_y = 0;*/
   showSerial(1, 1);
-  delay(300);
 }
+
 void showSerial(uint8_t contNum, uint8_t cursorNum) {
-  byte data[] = {0, 0, 0, 0};
   if ( Serial.available() >= dataSize ) {
+    byte data[] = {0, 0, 0, 0};
     if ( Serial.read() == 'H' ) {
       data[0] = Serial.read();
       data[1] = Serial.read();
       data[2] = Serial.read();
       data[3] = Serial.read();
     }
+    String out = zeroPadBin(8, data[contNum - 1]);
+    lcd.setCursor(0, cursorNum - 1); //LCDの1段目に表示
+    lcd.print(contNum);
+    lcd.print(":");
+    lcd.print(out);
+    Serial.println(out);
+
   }
-  String out = zeroPadBin(8, data[contNum - 1]);
-  lcd.setCursor(0, cursorNum - 1); //LCDの1段目に表示
-  lcd.print(contNum);
-  lcd.print(":");
-  lcd.print(out);
 }
 
 String zeroPadBin(uint8_t numLength, uint8_t num) {
