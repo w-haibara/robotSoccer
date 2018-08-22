@@ -3,7 +3,7 @@
 
 LiquidCrystal_I2C lcd(0x3f, 16, 2); //I2Cアドレスを指定
 
-int dataSize = sizeof('H') + sizeof(byte) * 4
+const int dataSize = sizeof('H') + sizeof(byte) * 4;
 
 void setup() {
   Serial.begin(9600);
@@ -12,17 +12,20 @@ void setup() {
 }
 
 void loop() {
-  byte data[] = {0, 0, 0, 0};
-  byte buuton2 = 0;
-  byte buuton1 = 0;
-  byte y = 0;
-  byte x = 0;
+  /*byte data[] = {0, 0, 0, 0};
+    byte buuton2 = 0;
+    byte buuton1 = 0;
+    byte y = 0;
+    byte x = 0;
 
-  int pwm[] = {0, 100, 180, 255};
-  int pwm_x = 0;
-  int pwm_y = 0;
+    int pwm[] = {0, 100, 180, 255};
+    int pwm_x = 0;
+    int pwm_y = 0;*/
+  showSerial(1, 1);
+  delay(300);
 }
-void showSerial() {
+void showSerial(uint8_t contNum, uint8_t cursorNum) {
+  byte data[] = {0, 0, 0, 0};
   if ( Serial.available() >= dataSize ) {
     if ( Serial.read() == 'H' ) {
       data[0] = Serial.read();
@@ -31,5 +34,47 @@ void showSerial() {
       data[3] = Serial.read();
     }
   }
+  String out = zeroPadBin(8, data[contNum - 1]);
+  lcd.setCursor(0, cursorNum - 1); //LCDの1段目に表示
+  lcd.print(contNum);
+  lcd.print(":");
+  lcd.print(out);
 }
 
+String zeroPadBin(uint8_t numLength, uint8_t num) {
+  /* numをnumLength桁になるようにゼロ埋めしたString型の変数で返す関数
+  */
+
+  byte minus = 0;
+  if (num < 0) {
+    num = abs(num);
+    minus = 1;
+  }
+
+  String NUM = String(num, BIN);
+  String ZERO = "0";
+
+  if (num == 0) {
+    for (int i = 2; i <= numLength; i++) {
+      ZERO.concat(NUM);
+      NUM = ZERO;
+      ZERO = "0";
+    }
+  } else {
+    for (int i = 1; i <= numLength - minus; i++) {
+      if (0 < num && num < pow(2, i - 1)) {
+        ZERO.concat(NUM);
+        NUM = ZERO;
+        ZERO = "0";
+      }
+    }
+  }
+
+  if (minus == 1) {
+    String MINUS = "-";
+    MINUS.concat(NUM);
+    NUM = MINUS;
+    num = -num;
+  }
+  return (NUM);
+}
