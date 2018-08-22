@@ -4,8 +4,8 @@ import processing.serial.*;
 boolean xboxSuccess = false;
 
 int comNum = 3;
-//Serial myPort= new Serial(this, "COM"+comNum, 9600);
-Serial myPort= new Serial(this, "/dev/ttyACM0", 9600);
+Serial myPort= new Serial(this, "COM"+comNum, 9600);
+//Serial myPort= new Serial(this, "/dev/ttyACM0", 9600);
 
 byte serialData = 0x00;
 
@@ -145,7 +145,8 @@ void sendSerial() {
     break;
   default:
   }
-  if (y1<0) {
+  
+  if (y1>0) {
     serialData |= 0x20;
   }
   switch(int(abs(y1))) {
