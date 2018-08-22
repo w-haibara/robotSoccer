@@ -1,6 +1,3 @@
-/* we want to fix the RS machine
-   DC moter compose a shoot machinism doesn't react
-*/
 #define LEFT 13,12,10 //Left moter pins (SIG1,SIG2,PWM)
 #define RIGHT 7,8,9    //Right moter pins (SIG1,SIG2,PWM)
 #define SHOOT 2,3,6    //Shoot moter pins (SIG1,SIG2,PWM)

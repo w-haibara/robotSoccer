@@ -2,7 +2,7 @@ import org.gamecontrolplus.*; //<>//
 import processing.serial.*;
 
 int comNum = 3;
-Serial myPort; //= new Serial(this, "COM"+comNum, 9600);
+Serial myPort= new Serial(this, "COM"+comNum, 9600);
 
 byte serialData = 0x00;
 
@@ -10,27 +10,30 @@ int drawCount = 1;
 int swichScene = 0;
 
 int  num = 1;
-int count = 1;
 
 boolean Hat = false;
 boolean Button1 = false;
 boolean Button2 = false;
-
 int hatPos = 0;
-
 float x1 = 0;
 float y1 = 0;
+
+boolean Button1_key = false;
+boolean Button2_key = false;
+float x1_key = 0;
+float y1_key = 0;
+
 
 boolean L = false;
 boolean R = false;
 boolean F = false;
 boolean B = false;
 
-int slave = 1;
+int slave = 0;
 
 void setup() {
-  fullScreen();
-  //size(1200, 1000);
+  // fullScreen();
+  size(1200, 1000);
   background(20);
   noStroke();
 }
@@ -80,8 +83,7 @@ void draw() {
   case 4:
     xbox_main();
 
-
-    // sendSerial();
+    sendSerial();
 
     System.gc();
     delay(5);
@@ -129,7 +131,7 @@ void seekCom() {
 
 void sendSerial() {
   serialData = 0x00;
-  print("device" + num + " COM" + comNum + "  ");
+  //  print("device" + num + " COM" + comNum + "  ");
   if (x1<0) {
     serialData |= 0x4;
   }
@@ -173,7 +175,9 @@ void sendSerial() {
     }
     myPort.write(serialData);
   }
-  println("serialData : " + binary(serialData) + " / x:"+x1+"/y:"+y1+"/B1"+Button1+"/B2"+Button2);
+  if (num == 1) {
+    println("serialData : " + binary(serialData) + " / x:"+x1+"/y:"+y1+"/B1"+Button1+"/B2"+Button2);
+  }
 }
 
 void xbox_main() {
@@ -182,144 +186,117 @@ void xbox_main() {
   controlers[1] = 3;
   controlers[2] = 5;
   controlers[3] = 6;
+
   getKeyStatus();
-  xbox(controlers, num-1, false);
-}
 
-void xbox(int[] Controlers, int NUM, boolean test) {
-  translate(0, (height/Controlers.length)*NUM);
-  fill(255);
-  PFont nameFont = loadFont("Kilowatt-Regular-70.vlw");
-  textFont(nameFont);
-
-  text(num, 20, 60);
-
-  drawDeviceNum(Controlers[num-1]);
-
-  if (!test) {
-    try {
-      ControlIO control;
-      ControlDevice device1;    //, device2;
-      ControlButton A, B, X, Y, HAT;
-      ControlSlider[] sliders = new ControlSlider[2];
-
-      ControlHat hat;
-
-      control = ControlIO.getInstance(this);
-      device1 = control.getDevice(Controlers[num-1]);
-      //device2 = control.getDevice("Controller (Xbox 360 Wireless Receiver for Windows)");
-      device1.open();
-
-      A = device1.getButton(0);
-      B = device1.getButton(1);
-      X = device1.getButton(2);
-      Y = device1.getButton(3);
-      HAT  = device1.getButton(10);
-
-      hat = device1.getHat(10);
-
-      hatPos = hat.getPos();
-
-      sliders[0] = device1.getSlider(0);
-      sliders[1] = device1.getSlider(1);
-
-      if (HAT.pressed()) {
-        Hat = true;
-        switch(hatPos) {
-        case 1:
-          x1 = -0.7;
-          y1 = -0.7;
-          break;
-        case 2:
-          y1 = -1;
-          break;
-        case 3:
-          x1 = 0.7;
-          y1 = -0.7;
-          break;
-        case 4:
-          x1 = 1;
-          break;
-        case 5:
-          x1 = 0.7;
-          y1 = 0.7;
-          break;
-        case 6:
-          y1 = 1;
-          break;
-        case 7:
-          x1 = -0.7;
-          y1 = 0.7;
-          break;
-        case 8:
-          x1 = -1;
-          break;
-        }
-      } else {
-        Hat = false;
-        x1 = sliders[1].getValue();
-        y1 = sliders[0].getValue();
-      }
-
-      if (A.pressed() || X.pressed()) {
-        Button1 = true;
-      } else {
-        Button1 = false;
-      }
-
-      if (B.pressed() || Y.pressed()) {
-        Button2 = true;
-      } else {
-        Button2 = false;
-      }
-    }
-    catch(java.lang.RuntimeException e) {
-      fill(20); 
-      int rectX = 120+700+100;
-      int rectY = height/4;
-      rect(0, 0, rectX, rectY);
-      fill(255);
-      text("the device is not available 3", width/4, height/8);
-    }
-    if (slave == num) {
-      drawControlerStatus();
-    }
+  if (num!=slave) {
+    xbox(controlers);
   } else {
-
-    x1 = 0;
-    y1 = 0;
-
-    String[] buttonName  ={ "A", "B", "X", "Y", "RB", "LB", "BACK", "START"};
-
-    for (int i=0; i<=7; i++) {
-      text(buttonName[i], 120+i*100, 60);
-    }
+    Button1 = Button1_key;
+    Button2 = Button2_key;
+    x1 = x1_key;
+    y1 = y1_key;
   }
 
-  fill(20, 120); 
-  int rectX = 120+700+100;
-  int rectY = height/4;
-
-  rect(0, 0, rectX, rectY);
-
-  do {
-    noFill();
-    stroke(255);
-    rect(0, 0, rectX, rectY);
-    noStroke();
-  } while (false);
-
-  translate(0, -(height/Controlers.length)*NUM);
-
+  drawControlerStatus(controlers, num-1);
   num++;
   num = (num==5)? 1 : num;
+}
 
-  count++;
+void xbox(int[] Controlers) {
+  try {
+    ControlIO control;
+    ControlDevice device1;    //, device2;
+    ControlButton A, B, X, Y, HAT;
+    ControlSlider[] sliders = new ControlSlider[2];
+
+    ControlHat hat;
+
+    control = ControlIO.getInstance(this);
+    device1 = control.getDevice(Controlers[num-1]);
+    //device2 = control.getDevice("Controller (Xbox 360 Wireless Receiver for Windows)");
+    device1.open();
+
+    A = device1.getButton(0);
+    B = device1.getButton(1);
+    X = device1.getButton(2);
+    Y = device1.getButton(3);
+    HAT  = device1.getButton(10);
+
+    hat = device1.getHat(10);
+
+    hatPos = hat.getPos();
+
+    sliders[0] = device1.getSlider(0);
+    sliders[1] = device1.getSlider(1);
+
+    if (HAT.pressed()) {
+      Hat = true;
+      switch(hatPos) {
+      case 1:
+        x1 = -0.7;
+        y1 = -0.7;
+        break;
+      case 2:
+        y1 = -1;
+        break;
+      case 3:
+        x1 = 0.7;
+        y1 = -0.7;
+        break;
+      case 4:
+        x1 = 1;
+        break;
+      case 5:
+        x1 = 0.7;
+        y1 = 0.7;
+        break;
+      case 6:
+        y1 = 1;
+        break;
+      case 7:
+        x1 = -0.7;
+        y1 = 0.7;
+        break;
+      case 8:
+        x1 = -1;
+        break;
+      }
+    } else {
+      Hat = false;
+      x1 = sliders[1].getValue();
+      y1 = sliders[0].getValue();
+    }
+
+    if (A.pressed() || X.pressed()) {
+      Button1 = true;
+    } else {
+      Button1 = false;
+    }
+
+    if (B.pressed() || Y.pressed()) {
+      Button2 = true;
+    } else {
+      Button2 = false;
+    }
+  }
+  catch(java.lang.RuntimeException e) {
+    fill(20); 
+    int rectX = 120+700+100;
+    int rectY = height/4;
+    rect(0, 0, rectX, rectY);
+    fill(255);
+    text("the device is not available 3", width/4, height/8);
+  }
 }
 
 void drawDeviceNum(int devNum) {
   if (devNum>=0) {
-    text("device "+devNum, 60, 60+height/6);
+    if (slave==num) {
+      text("slave", 50, 60+height/6);
+    } else { 
+      text("device "+devNum, 60, 60+height/6);
+    }
   } else {
     text("no device", 20, 60+height/6);
   }
@@ -333,7 +310,16 @@ void drawComNum() {
   }
 }
 
-void drawControlerStatus() {
+void drawControlerStatus(int[] Controlers, int NUM) {
+  translate(0, (height/Controlers.length)*NUM);
+  fill(255);
+  PFont nameFont = loadFont("Kilowatt-Regular-70.vlw");
+  textFont(nameFont);
+
+  text(num, 20, 60);
+
+  drawDeviceNum(Controlers[num-1]);
+
   x1 = (int(x1*3)/3.0)*100;
   y1 = (int(y1*3)/3.0)*100;
 
@@ -350,58 +336,52 @@ void drawControlerStatus() {
     text("B", 120+200, 60);
     text("Y", 120+400, 60);
   }
+
+  fill(20, 120); 
+  int rectX = 120+700+100;
+  int rectY = height/4;
+  rect(0, 0, rectX, rectY);
+
+  noFill();
+  stroke(255);
+  rect(0, 0, rectX, rectY);
+  noStroke();
+
+  translate(0, -(height/Controlers.length)*NUM);
 }
 
 void getKeyStatus() {
-  x1 = 0;
-  y1 = 0;
-  println("");
+  x1_key = 0;
+  y1_key = 0;
   if (R) {
-    x1 = 1;
-    hatPos = 4;
-    print("LEFT  ");
+    x1_key = 1;
   } else if (L) {
-    x1 = -1;
-    hatPos = 8;
-    print("RIGHT  ");
+    x1_key = -1;
   }
   if (F) {
-    y1 = -1;
-    hatPos = 2;
-    print("FORW  ");
+    y1_key = -1;
   } else if (B) {
-    y1 = 1;
-    hatPos = 6;
-    print("BACK  ");
+    y1_key = 1;
   }
   if (R && (F || B)) {
-    x1 = 0.7;    
-    hatPos = 3;
+    x1_key = 0.7;
   }  
   if (L && (F || B)) {
-    x1 = -0.7;
-    hatPos = 4;
+    x1_key = -0.7;
   }
   if ((L || R) && F) {
-    y1 = -0.7;
+    y1_key = -0.7;
   }  
   if ((L || R) && B) {
-    y1 = 0.7;
+    y1_key = 0.7;
   }
-  if (Button1) {
-    print("Button1");
-  }
-  if (Button2) {
-    print("Button2");
-  }
-  if (!L && !R && !F && !B && !Button1 && !Button2) {
-    print("not pressed");
-  }
-  print(" x1:"+x1+" y1:"+y1);
 }
 
 void keyPressed() {
   switch(key) {
+  case '0':
+    slave = 0;
+    break;
   case '1':
     slave = 1;
     break;
@@ -418,40 +398,36 @@ void keyPressed() {
   }
   if (!R && key=='a') {
     L = true;
-    Hat = true;
   }
   if (!L && key=='d') {
     R = true;
-    Hat = true;
   }
   if (!B && key=='w') {
     F = true;
-    Hat = true;
   }
   if (!F && key=='s') {
     B = true;
-    Hat = true;
   }
-  if (!Button2 && key=='i') {
-    Button1 = true;
+  if (key=='i') {
+    Button1_key = true;
   }
-  if (!Button1 && key=='o') {
-    Button2 = true;
+  if (key=='o') {
+    Button2_key = true;
   }
 }
 void keyReleased() {
   if (key=='a' || key=='d') {
     L = false;
     R = false;
-    Hat = false;
   }
   if (key=='w' || key=='s') {
     F = false;
     B = false;
-    Hat = false;
   }
-  if (key=='i' || key=='o') {
-    Button1 = false;
-    Button2 = false;
+  if (key=='i') {
+    Button1_key = false;
+  }
+  if (key=='o') {
+    Button2_key = false;
   }
 }
