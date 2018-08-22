@@ -4,7 +4,8 @@ import processing.serial.*;
 boolean xboxSuccess = false;
 
 int comNum = 3;
-Serial myPort= new Serial(this, "COM"+comNum, 9600);
+//Serial myPort= new Serial(this, "COM"+comNum, 9600);
+Serial myPort= new Serial(this, "/dev/ttyACM0", 9600);
 
 byte serialData = 0x00;
 
@@ -170,11 +171,13 @@ void sendSerial() {
     if (num==1) {
       myPort.write("H");
     }
+    println(num+" : "+binary(serialData));
     myPort.write(serialData);
   }
-  if (num == 1) {
-    println("serialData : " + binary(serialData) + " / x:"+x1+"/y:"+y1+"/B1"+Button1+"/B2"+Button2);
-  }
+  /* if (num == 1) {
+   *   println("serialData : " + binary(serialData) + " / x:"+x1+"/y:"+y1+"/B1"+Button1+"/B2"+Button2);
+   * }
+   */
 }
 
 void xbox_main() {
@@ -194,11 +197,17 @@ void xbox_main() {
     x1 = x1_key;
     y1 = y1_key;
   }
-  if (xboxSuccess) {
-    drawControlerStatus(controlers, num-1);
-  }
+
+  drawControlerStatus(controlers, num-1);
   sendSerial();
-  println(xboxSuccess);
+
+  if (num==slave) {
+    Button1 = false;
+    Button2 = false;
+    x1 = 0;
+    y1 = 0;
+  }
+
   num++;
   num = (num==5)? 1 : num;
 }
@@ -286,6 +295,7 @@ void xbox(int[] Controlers) {
   }
 }
 
+
 void drawDeviceNum(int devNum) {
   if (devNum>=0) {
     if (slave==num) {
@@ -299,7 +309,7 @@ void drawDeviceNum(int devNum) {
 }
 
 void drawComNum() {
-  if (comNum>=0) {
+  if (comNum>0) {
     text("COM "+comNum, width/2-140, 60+height/6);
   } else {
     text("no port", width/2-160, 60+height/6);
@@ -311,7 +321,7 @@ void drawControlerStatus(int[] Controlers, int NUM) {
   fill(255);
   PFont nameFont = loadFont("Kilowatt-Regular-70.vlw");
   textFont(nameFont);
-  if (xboxSuccess) {
+  if (xboxSuccess || slave == num) {
     text(num, 20, 60);
 
     drawDeviceNum(Controlers[num-1]);
@@ -332,16 +342,6 @@ void drawControlerStatus(int[] Controlers, int NUM) {
       text("B", 120+200, 60);
       text("Y", 120+400, 60);
     }
-
-    fill(20, 120); 
-    int rectX = 120+700+100;
-    int rectY = height/4;
-    rect(0, 0, rectX, rectY);
-
-    noFill();
-    stroke(255);
-    rect(0, 0, rectX, rectY);
-    noStroke();
   } else {
     fill(20); 
     int rectX = 120+700+100;
@@ -350,6 +350,17 @@ void drawControlerStatus(int[] Controlers, int NUM) {
     fill(255);
     text("the device is not available 3", width/4, height/8);
   }
+
+  fill(20, 120); 
+  int rectX = 120+700+100;
+  int rectY = height/4;
+  rect(0, 0, rectX, rectY);
+
+  noFill();
+  stroke(255);
+  rect(0, 0, rectX, rectY);
+  noStroke();
+
   translate(0, -(height/Controlers.length)*NUM);
 }
 
