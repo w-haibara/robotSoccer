@@ -7,8 +7,8 @@ const int dataSize = sizeof('H') + sizeof(byte) * 4;
 
 boolean button2 = false;
 boolean button1 = false;
-int y = 0;
-int x = 0;
+int y1 = 0;
+int x1 = 0;
 
 void setup() {
   Serial.begin(9600);
@@ -17,11 +17,9 @@ void setup() {
 }
 
 void loop() {
-  int pwm[] = {0, 100, 180, 255};
-  int pwm_l = 0;
-  int pwm_r = 0;
-
   readSerialBit(1);
+
+  drive(x1, y1);
 
   if (button1) {
     //A・Xボタンが押されたときの処理
@@ -29,22 +27,17 @@ void loop() {
   if (button2) {
     //B・Yボタンが押されたときの処理
   }
-  /*  if (x>=B00000100) {
-      switch (x | B00000011) {
-        case B00000001:
-        x=
-          break;
-          default;
-      }
-    }*/
+}
+
+void drive(int x, int y) {
+  int pwm[] = {0, 100, 180, 255};
+  int pwm_l = 0;
+  int pwm_r = 0;
+
+  pwm_l = pwm[y];
+  pwm_r = pwm[x]
 
 
-  /*
-    buuton2 = ;
-    buuton1 = ;
-    y = ;
-    x = ;
-  */
 }
 
 void readSerialBit(uint8_t contNum) {
@@ -60,11 +53,11 @@ void readSerialBit(uint8_t contNum) {
     button2 = (data[0] >> 7) ? true : false;
     button1 = ((data[0] >> 6) & B00000001) ? true : false;
 
-    y = (data[0] >> 3) & B00000111;
-    y = (y >= B00000100) ? -(y & B00000011) : y;
+    y1 = (data[0] >> 3) & B00000111;
+    y1 = (y1 >= B00000100) ? -(y1 & B00000011) : y1;
 
-    x = data[0] & B00000111;
-    x = (x >= B00000100) ? -(x & B00000011) : x;
+    x1 = data[0] & B00000111;
+    x1 = (x1 >= B00000100) ? -(x1 & B00000011) : x1;
 
     lcd.setCursor(0, 0); //LCDの1段目に表示
 
@@ -82,16 +75,14 @@ void readSerialBit(uint8_t contNum) {
 
     lcd.setCursor(0, 1);
 
-    lcd.print("x:");
-    lcd.print(x);
+    lcd.print("x1:");
+    lcd.print(x1);
 
     lcd.print("   ");
 
-    lcd.print("y:");
-    lcd.print(y);
+    lcd.print("y1:");
+    lcd.print(y1);
     lcd.print("   ");
-
-
   }
 }
 
