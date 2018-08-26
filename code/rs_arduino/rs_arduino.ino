@@ -11,9 +11,12 @@ int y1 = 0;
 int x1 = 0;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   lcd.init(); //LCDを初期化
   lcd.backlight(); //LCDのバックライトをつける
+
+  pinMode(5, OUTPUT);
+
 }
 
 void loop() {
@@ -23,6 +26,9 @@ void loop() {
 
   if (button1) {
     //A・Xボタンが押されたときの処理
+    digitalWrite(5, HIGH);
+  } else {
+    digitalWrite(5, LOW);
   }
   if (button2) {
     //B・Yボタンが押されたときの処理
@@ -35,9 +41,7 @@ void drive(int x, int y) {
   int pwm_r = 0;
 
   pwm_l = pwm[y];
-  pwm_r = pwm[x]
-
-
+  pwm_r = pwm[x];
 }
 
 void readSerialBit(uint8_t contNum) {
