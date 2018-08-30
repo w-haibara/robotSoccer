@@ -4,11 +4,12 @@
 LiquidCrystal_I2C lcd(0x3f, 16, 2); //I2Cアドレスを指定
 
 const int dataSize = sizeof('H') + sizeof(byte) * 4;
-
+const int LED = 13;
 void setup() {
   Serial.begin(9600);
   lcd.init(); //LCDを初期化
   lcd.backlight(); //LCDのバックライトをつける
+  pinMode(LED, OUTPUT);
 }
 
 void loop() {
@@ -38,7 +39,14 @@ void showSerial(uint8_t contNum, uint8_t cursorNum) {
     lcd.print(contNum);
     lcd.print(":");
     lcd.print(out);
+    
     Serial.println(out);
+
+    if ((data[contNum - 1] >> 7) == B00000001 ){
+      digitalWrite(LED, LOW);
+    } else {
+      digitalWrite(LED, HIGH);
+    }
 
   }
 }
