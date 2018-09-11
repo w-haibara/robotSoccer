@@ -40,7 +40,7 @@ void setup() {
   WiFi.mode(WIFI_AP);
   WiFi.softAP(ssid, password);
   WiFi.config(myIP, WiFi.gatewayIP(), WiFi.subnetMask());
-  UDP.begin(893);
+  UDP.begin(100);
   //Serial.println("UDP.begin!");
 }
 
