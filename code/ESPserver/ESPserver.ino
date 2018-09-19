@@ -41,7 +41,11 @@ void setup() {
   WiFi.mode(WIFI_AP);
   WiFi.softAP(ssid, password);
   WiFi.config(myIP, WiFi.gatewayIP(), WiFi.subnetMask());
+<<<<<<< HEAD
   UDP.begin(port);
+=======
+  UDP.begin(100);
+>>>>>>> 438b00accdc4ad771542ca2f40fcba97a2be10f4
   //Serial.println("UDP.begin!");
 }
 

@@ -53,7 +53,11 @@ void setup() {
   Serial.begin(115200);
   //Serial.println("start");
   WiFi.mode(WIFI_STA);//重要!
+<<<<<<< HEAD
   UDP.begin(port);
+=======
+  UDP.begin(100);
+>>>>>>> 438b00accdc4ad771542ca2f40fcba97a2be10f4
   connectWiFi();
 }
 
