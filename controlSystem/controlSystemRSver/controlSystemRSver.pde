@@ -1,11 +1,11 @@
 import org.gamecontrolplus.*; //<>//
+
 import processing.serial.*;
+Serial myPort;
+String portName = "";
+final int portLength = Serial.list ().length;
 
 boolean xboxSuccess = false;
-
-int comNum = 5;
-Serial myPort= new Serial(this, "COM"+comNum, 115200);
-//Serial myPort= new Serial(this, "/dev/ttyACM0", 9600);
 
 byte serialData = 0x00;
 
@@ -33,11 +33,37 @@ boolean B = false;
 
 int slave = 0;
 
+Serial getSerialPort(Serial port, int baudRate) {
+  port = null;
+  int exceptionCount = 0;
+outside: 
+  {
+    for (int i = 0; i < portLength; i++) {
+      print(Serial.list ()[i] + " : ");
+      try {
+        port = new Serial(this, Serial.list()[i], baudRate);
+        portName = Serial.list()[i];
+        break outside;
+      }
+      catch(Exception e) {
+        exceptionCount++;
+      }
+    }
+    if ( exceptionCount == portLength) {
+      port = null;
+    }
+  }
+  return port;
+}
+
 void setup() {
-  // fullScreen();
-  size(1200, 1000);
+  fullScreen();
+  //size(1200, 1000);
   background(20);
   noStroke();
+
+  myPort = getSerialPort(myPort, 115200);
+  println(myPort);
 }
 
 void draw() {
@@ -105,6 +131,7 @@ void drawTitle(int back, int fill) {
   text("ATELIE         OF         DRESM", width/2, height/2+200);
 }
 
+
 /*
 void seekCom() {
  String[] portList = myPort.list ();
@@ -168,7 +195,7 @@ void sendSerial() {
     serialData |= 0x80;
   }
 
-  if (comNum>=0) {
+  if (myPort != null) {
     if (num==1) {
       myPort.write("H");
     }
@@ -200,6 +227,8 @@ void xbox_main() {
   }
 
   drawControlerStatus(controlers, num-1);
+  drawComNum();
+
   sendSerial();
 
   if (num==slave) {
@@ -310,8 +339,11 @@ void drawDeviceNum(int devNum) {
 }
 
 void drawComNum() {
-  if (comNum>0) {
-    text("COM "+comNum, width/2-140, 60+height/6);
+  if (myPort != null) {
+    fill(20);
+    rect(width/2, 0, width/2, height);
+    fill(200);
+    text(portName, width/2+100, height/4-200);
   } else {
     text("no port", width/2-160, 60+height/6);
   }

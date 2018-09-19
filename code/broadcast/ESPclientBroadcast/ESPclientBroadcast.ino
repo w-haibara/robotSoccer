@@ -39,7 +39,7 @@ IPAddress BroadcastIP (192, 168, 4, 255);
   IPアドレスのそれぞれの区切りは8bitなので，ホスト部を11111111_(2)つまり255とすると
   そのローカルネットワーク(ここでは192, 168, 4, ~)のブロードキャストアドレスを表す．
 */
-IPAddress myIP(192, 168, 4, 1);
+IPAddress myIP(192, 168, 5, 1);
 const char *ssid = "AoD_ESP_999";
 const char *password = "AoDESP999";
 

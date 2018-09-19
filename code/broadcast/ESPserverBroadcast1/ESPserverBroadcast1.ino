@@ -32,7 +32,7 @@ WiFiUDP UDP;
 IPAddress myIP(192, 168, 4, 2);
 const char *ssid = "AoD_ESP_999";
 const char *password = "AoDESP999";
-const int LED = 2;
+const int LED = 14;
 
 void setup() {
 
@@ -50,13 +50,13 @@ void setup() {
 void rcvWiFi() {
   UDP.read(WiFibuff, 1);
   Serial.write(WiFibuff[0]);
-
+/////////////////////////////////////////////////////////////
   if ((WiFibuff[0] >> 7) == B00000001 ) {
     digitalWrite(LED, HIGH);
   } else {
     digitalWrite(LED, LOW);
   }
-
+/////////////////////////////////////////////////////////////
   UDP.flush();
 }
 

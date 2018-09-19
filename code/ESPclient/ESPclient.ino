@@ -18,7 +18,6 @@
   ※PWにも使えない文字があって、英数混合8文字以上っていう制限付き
   ※IPアドレスは同一ネットワーク内じゃないから変更不要(被りok)
 
-
 */
 
 #include <ESP8266WiFi.h>
@@ -33,9 +32,10 @@ WiFiUDP UDP;
 
 // WiFi settings
 IPAddress HOSTIP (192, 168, 4, 1);
-IPAddress myIP(192, 168, 4, 3);//4.1: 4.2: 4.3
-const char *ssid = "AoD_ESP_999";
-const char *password = "AoDESP999";
+IPAddress myIP(192, 168, 4, 2);//4.1: 4.2: 4.3
+const char *ssid = "AoD_ESP_100";
+const char *password = "AoDESP100";
+const uint8_t port = 100;
 
 void connectWiFi() {
   WiFi.begin(ssid, password);//接続先を指定する
@@ -53,7 +53,7 @@ void setup() {
   Serial.begin(115200);
   //Serial.println("start");
   WiFi.mode(WIFI_STA);//重要!
-  UDP.begin(893);
+  UDP.begin(port);
   connectWiFi();
 }
 

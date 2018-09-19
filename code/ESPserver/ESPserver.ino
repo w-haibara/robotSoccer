@@ -30,8 +30,9 @@ byte WiFibuff[1];
 WiFiUDP UDP;
 // WiFi setting
 IPAddress myIP(192, 168, 4, 1);
-const char *ssid = "AoD_ESP_999";
-const char *password = "AoDESP999";
+const char *ssid = "AoD_ESP_100";
+const char *password = "AoDESP100";
+const uint8_t port = 100;
 
 void setup() {
 
@@ -40,7 +41,7 @@ void setup() {
   WiFi.mode(WIFI_AP);
   WiFi.softAP(ssid, password);
   WiFi.config(myIP, WiFi.gatewayIP(), WiFi.subnetMask());
-  UDP.begin(893);
+  UDP.begin(port);
   //Serial.println("UDP.begin!");
 }
 
